@@ -2,6 +2,7 @@
 
 ## 1. Integrantes y roles
 | Ana Sofía Siachoque | Bases de datos / SQL | Diseño del modelo de datos, desarrollo en SQL, constraints e integridad de datos. |
+
 | Andres Felipe Rubiano Duarte | Desarrollo en Java | Lógica de negocio, implementación del backend en Java, integración con la base de datos |
 
 

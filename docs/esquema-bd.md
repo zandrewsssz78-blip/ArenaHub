@@ -6,7 +6,7 @@ FRANJAS_HORARIAS ||--o{ RESERVAS : define
 USUARIOS {
 serial id PK
 varchar nombre
-varchar correo UK
+varchar correo CO
 varchar password_hash
 }
 ESCENARIOS {

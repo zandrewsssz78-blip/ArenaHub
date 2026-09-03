@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 classDiagram
     direction TB
 
@@ -36,13 +37,51 @@ classDiagram
     }
 
     %% --- ENUMERACIONES Y VALORES DEL NEGOCIO ---
+=======
+```mermaid
+classDiagram
+    direction TB
+    class Usuario {
+        +Long id
+        +String nombre
+        +String email
+        +String contrasenaHash
+        +RolUsuario rol
+        +Boolean activo
+    }
+    class EscenarioDeportivo {
+        +Long id
+        +String nombre
+        +TipoEscenario tipo
+        +String ubicacion
+        +Integer capacidad
+        +String descripcion
+        +EstadoEscenario estado
+    }
+    class Reserva {
+        +Long id
+        +String codigoReserva
+        +Date fecha
+        +EstadoReserva estado
+        +LocalDateTime fechaCreacion
+        +String observacion
+    }
+    class FranjaHoraria {
+        +Long id
+        +Time horaInicio
+        +Time horaFin
+    }
+>>>>>>> 0b937e2487656bfad06bbd6eb7faa214a23fb7b4
     class RolUsuario {
         <<enumeration>>
         JUGADOR
         ENTRENADOR
         ADMINISTRADOR
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b937e2487656bfad06bbd6eb7faa214a23fb7b4
     class TipoEscenario {
         <<enumeration>>
         FUTBOL
@@ -52,7 +91,10 @@ classDiagram
         TENIS
         OTRO
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b937e2487656bfad06bbd6eb7faa214a23fb7b4
     class EstadoReserva {
         <<enumeration>>
         PENDIENTE
@@ -60,13 +102,17 @@ classDiagram
         CANCELADA
         RECHAZADA
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b937e2487656bfad06bbd6eb7faa214a23fb7b4
     class EstadoEscenario {
         <<enumeration>>
         ACTIVO
         INACTIVO
         EN_MANTENIMIENTO
     }
+<<<<<<< HEAD
 
     %% --- ESTRUCTURA DE RELACIONES Y NÚCLEO ---
     Usuario "1" --> "0..*" Reserva : realiza
@@ -79,3 +125,14 @@ classDiagram
     note for FranjaHoraria "VALUE OBJECT TEMPORAL:\nReifica el intervalo [horaInicio, horaFin]\nen una fecha dada para validar el solapamiento."
 
     note for Reserva "INVARIANTE DE DOMINIO (Regla de Negocio):\nPara un mismo EscenarioDeportivo y fecha, NO PUEDEN\ncoexistir dos instancias de Reserva en estado CONFIRMADA\ncuyas FranjaHoraria se solapen temporalmente.\n\nEVIDENCIA Y CONCURRENCIA (HU4 - Criterio 3):\nAnte 20 solicitudes simultáneas para la misma franja:\n- Exactamente 1 pasa a estado CONFIRMADA.\n- 19 son desestimadas (las rechazadas por concurrencia síncrona NO persisten en BD)."
+=======
+    Usuario --> Reserva : realiza
+    EscenarioDeportivo --> Reserva : alberga
+    FranjaHoraria --> Reserva : define
+    
+    note for EscenarioDeportivo "Solo escenarios ACTIVOS reciben reservas."
+    note for FranjaHoraria "Define bloques temporales y evita solapamientos."
+    note for Reserva "Invariante: No pueden coexistir dos reservas CONFIRMADAS para el mismo escenario, fecha y franja."
+    ```
+    
+>>>>>>> 0b937e2487656bfad06bbd6eb7faa214a23fb7b4

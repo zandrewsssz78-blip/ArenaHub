@@ -1,23 +1,14 @@
-# Acuerdos de equipo — Detector de Alertas de Contratación (DAC)
+# Acuerdos de Equipo ArenaHub
 
-1. **Reuniones:** nos reunimos [día(s) y hora] por [presencial/videollamada]
-   para revisar avances.
+## 1. Integrantes y roles
+| Ana Sofía Siachoque | Bases de datos / SQL | Diseño del modelo de datos, desarrollo en SQL, constraints e integridad de datos. |
 
-2. **Reparto de trabajo:** cada integrante toma al menos una historia de
-   usuario por entrega y es responsable de implementarla y probarla.
+| Andres Felipe Rubiano Duarte | Desarrollo en Java | Lógica de negocio, implementación del backend en Java, integración con la base de datos |
 
-3. **Comunicación:** si alguien no va a poder cumplir con su parte, avisa
-   al equipo con al menos 24 horas de anticipación.
 
-4. **Git:**
-   - Nadie sube cambios directo a la rama `main`.
-   - Todo cambio entra por Pull Request (PR).
-   - Nadie aprueba su propio PR; siempre lo revisa otro integrante.
 
-5. **Roles para esta entrega:**
-   - Gerson Geovanni Rojo Rodríguez: documentación (visión, acuerdos, problema duro).
-   - Juan Pablo Cardozo Rivera: código del esqueleto andante y prueba unitaria.
-   - Yerson Andrés Pérez Cadena: decisiones técnicas, uso de IA e historias de usuario.
-
-6. **Decisiones:** las decisiones técnicas importantes se registran por
-   escrito en `docs/decisiones-tecnicas.md`, no solo se hablan.
+## 2. Cómo se toman las decisiones
+- Las decisiones técnicas y de alcance se toman entre los dos integrantes, por consenso.
+- Cada quien tiene autonomía sobre las decisiones de implementación dentro de su área (Sofía en BD/SQL, Andrés en Java), siempre que no afecten el contrato o la interfaz acordada entre ambas partes (ej. estructura de tablas, formato de las consultas/respuestas).
+- Cualquier cambio que afecte a ambas áreas (ej. cómo se garantiza laconcurrencia, qué campos tiene una reserva) se discute y se acuerdaentre los dos antes de implementarse.
+- Los acuerdos relevantes se dejan registrados en el tablero de trabajoy/o en los mensajes de commit correspondientes.

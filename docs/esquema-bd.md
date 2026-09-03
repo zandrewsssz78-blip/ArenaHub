@@ -6,7 +6,7 @@ erDiagram
   USUARIOS {
     serial id PK
     varchar nombre
-    varchar correo UK
+    varchar correo
     varchar password_hash
     varchar rol
     boolean activo

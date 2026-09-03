@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16
+    container_name: arenahub-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: reservas_deportivas
+      POSTGRES_USER: arenahub
+      POSTGRES_PASSWORD: arenahub123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+  

@@ -18,29 +18,24 @@ classDiagram
         +RolUsuario rol
         +Boolean activo
     }
+```
 
-    class RegistroUsuarioHTTP {
-        <<HTTP/UI>>
-        +registrarUsuario()
-    }
+## Capa
 
-    class RegistroUsuarioAplicacion {
-        <<Application>>
-        +registrarUsuario()
-    }
+| Clase     | Capa    | Tipo    |
+| --------- | ------- | ------- |
+| `Usuario` | Dominio | Entidad |
 
-    class PersistenciaUsuario {
-        <<Port>>
-        +guardar(Usuario)
-    }
+## Comprobación
 
-    class PersistenciaUsuarioImpl {
-        <<Implementation>>
-        +guardar(Usuario)
-    }
+El diagrama contiene exclusivamente la clase `Usuario`, debido a que es la única clase del modelo de dominio que participa en la rebanada de registro de usuario seleccionada.
 
-    RegistroUsuarioHTTP --> RegistroUsuarioAplicacion : solicita registro
-    RegistroUsuarioAplicacion --> Usuario : crea/usa
-    RegistroUsuarioAplicacion --> PersistenciaUsuario : guarda
-    PersistenciaUsuario <|.. PersistenciaUsuarioImpl : implementa
-    PersistenciaUsuarioImpl --> Usuario : mapea
+No se incluyen otras clases del modelo de dominio porque no participan en esta rebanada.
+
+Las clases correspondientes a HTTP, aplicación y persistencia no se incluyen como clases del diagrama porque no existe un origen verificable para sus nombres concretos en los documentos fuente.
+
+## VACÍOS DETECTADOS
+
+No existe en los documentos fuente consultados un nombre verificable para una interfaz o puerto de persistencia ni para su implementación concreta.
+
+Por esta razón no se inventan clases adicionales para representar esas fronteras.

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: arenahub
+  datasource:
+    url: ${ARENAHUB_DB_URL:jdbc:postgresql://localhost:5432/reservas_deportivas?currentSchema=arenahub}
+    username: ${ARENAHUB_DB_USER:arenahub}
+    password: ${ARENAHUB_DB_PASSWORD:arenahub123}
+  flyway:
+    # Esquema propio: no choca con las tablas de prueba de la semana 5 (esquema public)
+    schemas: arenahub
+    default-schema: arenahub
+    create-schemas: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # el esquema lo crea Flyway, Hibernate solo lo verifica
+
+server:
+  port: 8080

@@ -1,0 +1,9 @@
+# Las pruebas usan el mismo PostgreSQL de docker-compose, pero en un esquema aparte
+# que se borra y se vuelve a migrar en cada ejecución (base de datos "nueva").
+spring:
+  datasource:
+    url: ${ARENAHUB_TEST_DB_URL:jdbc:postgresql://localhost:5432/reservas_deportivas?currentSchema=arenahub_test}
+  flyway:
+    schemas: arenahub_test
+    default-schema: arenahub_test
+    clean-disabled: false

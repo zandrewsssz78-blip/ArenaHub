@@ -75,6 +75,21 @@ public class Reserva {
         return reserva;
     }
 
+    /**
+     * HU5 — Cancela una reserva aplicando las reglas de negocio:
+     * - Solo el usuario dueño de la reserva puede cancelarla.
+     * - No se puede cancelar una reserva que ya está cancelada.
+     */
+    public void cancelar(Long usuarioIdSolicitante) {
+        if (this.usuario == null || !this.usuario.coincideConId(usuarioIdSolicitante)) {
+            throw new ReglaNegocioException("No tienes permiso para cancelar una reserva de otro usuario");
+        }
+        if (this.estado == EstadoReserva.CANCELADA) {
+            throw new ReglaNegocioException("La reserva ya se encuentra cancelada");
+        }
+        this.estado = EstadoReserva.CANCELADA;
+    }
+
     public Long getId() { return id; }
     public String getCodigoReserva() { return codigoReserva; }
     public Usuario getUsuario() { return usuario; }

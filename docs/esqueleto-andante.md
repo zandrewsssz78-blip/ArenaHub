@@ -14,9 +14,11 @@ HTTP (Spring MVC) → Aplicación (servicios) → Dominio (entidades) → JPA/Hi
 | **HU1** Registro de usuario | `POST /api/usuarios` | `201` usuario creado · `409` correo ya registrado · `400` datos inválidos |
 | **HU3** Consultar escenarios disponibles | `GET /api/escenarios/disponibilidad?fecha=AAAA-MM-DD` | `200` escenarios **ACTIVOS** con cada franja marcada `ocupada: true/false` |
 | **HU4** Crear una reserva | `POST /api/reservas` | `201` reserva `CONFIRMADA` · `409` horario ocupado · `422` escenario no activo · `404` usuario/escenario/franja inexistente |
+| **HU5** Cancelar una reserva | `PATCH /api/reservas/{id}/cancelar` (o `DELETE /api/reservas/{id}?usuarioId=X`) | `200` reserva `CANCELADA` y horario liberado · `422` reserva ajena o ya cancelada · `404` no existe |
+| **HU6** Ver historial de reservas | `GET /api/reservas?usuarioId=X` | `200` lista de reservas con escenario, franja y estado · `404` usuario inexistente |
 
 > **Limitación conocida:** HU2 (inicio de sesión) aún no existe, por eso `usuarioId`
-> viaja en el cuerpo de `POST /api/reservas`. Cuando se implemente HU2 saldrá del token.
+> viaja en el cuerpo o parámetros de las solicitudes. Cuando se implemente HU2 saldrá del token.
 
 ## Estructura del código
 

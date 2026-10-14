@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * HU4 — Crear una reserva (problema duro: concurrencia).
@@ -63,6 +64,34 @@ public class ReservaService {
             }
             throw e;
         }
+    }
+
+    /**
+     * HU5 — Cancelar una reserva.
+     */
+    @Transactional
+    public Reserva cancelar(Long reservaId, Long usuarioId) {
+        Reserva reserva = reservas.findByIdConDetalle(reservaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Reserva " + reservaId + " no existe"));
+        reserva.cancelar(usuarioId);
+        return reservas.save(reserva);
+    }
+
+    /**
+     * HU6 — Ver historial de reservas de un usuario.
+     */
+    @Transactional(readOnly = true)
+    public List<Reserva> listarPorUsuario(Long usuarioId) {
+        if (!usuarios.existsById(usuarioId)) {
+            throw new RecursoNoEncontradoException("Usuario " + usuarioId + " no existe");
+        }
+        return reservas.buscarPorUsuarioConDetalle(usuarioId);
+    }
+
+    @Transactional(readOnly = true)
+    public Reserva obtenerPorId(Long reservaId) {
+        return reservas.findByIdConDetalle(reservaId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Reserva " + reservaId + " no existe"));
     }
 
     private static ConflictoException horarioOcupado() {

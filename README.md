@@ -51,6 +51,13 @@ curl "localhost:8080/api/escenarios/disponibilidad?fecha=2026-10-15"
 # HU4 — reservar (usuarioId del paso 1, escenarioId y franjaId del paso 2)
 curl -X POST localhost:8080/api/reservas -H "Content-Type: application/json" \
   -d '{"usuarioId":1,"escenarioId":1,"fecha":"2026-10-15","franjaId":13}'
+
+# HU6 — ver historial de reservas propias
+curl "localhost:8080/api/reservas?usuarioId=1"
+
+# HU5 — cancelar una reserva propia (id de reserva del paso anterior)
+curl -X PATCH localhost:8080/api/reservas/1/cancelar -H "Content-Type: application/json" \
+  -d '{"usuarioId":1}'
 ```
 
 Detalle del esqueleto andante: [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md).
@@ -75,5 +82,5 @@ sincronización) en [`docs/problema-duro.md`](./docs/problema-duro.md).
 
 ## Estado del proyecto
 
-Esqueleto andante con 3 historias funcionales (HU1, HU3, HU4) y la prueba de
+Esqueleto andante con 5 historias funcionales (HU1, HU3, HU4, HU5, HU6) y la prueba de
 concurrencia del problema duro. Curso de Ingeniería de Software.

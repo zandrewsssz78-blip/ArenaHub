@@ -38,6 +38,15 @@ public class Usuario {
         this.activo = true;
     }
 
+    public Usuario(Long id, String nombre, String email, String contrasenaHash) {
+        this(nombre, email, contrasenaHash);
+        this.id = id;
+    }
+
+    public boolean coincideConId(Long otroId) {
+        return this.id != null && this.id.equals(otroId);
+    }
+
     public Long getId() { return id; }
     public String getNombre() { return nombre; }
     public String getEmail() { return email; }

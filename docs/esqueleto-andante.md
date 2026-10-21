@@ -53,7 +53,7 @@ CREATE UNIQUE INDEX uq_reserva_confirmada
 
 | Prueba | Tipo | Qué demuestra |
 |---|---|---|
-| `dominio/ReservaTest` | Unitaria (sin Spring ni BD) | Reserva queda CONFIRMADA; escenario en mantenimiento se rechaza; franja inválida |
+| `dominio/ReservaTest` | Unitaria (sin Spring ni BD) | Reserva queda CONFIRMADA; escenario en mantenimiento se rechaza; fecha pasada se rechaza y el mismo día se permite; franja inválida; reglas de cancelación |
 | `aplicacion/ReservaServiceTest` | Unitaria con Mockito | HU5 y HU6: cancelación exitosa, reglas de negocio y consulta de historial |
 | `aplicacion/AutenticacionServiceTest` | Unitaria con Mockito | HU2: login exitoso, fallo por correo o contraseña incorrecta sin revelar causa, usuario inactivo |
 | `aplicacion/EscenarioServiceTest` | Unitaria con Mockito | HU7 y HU8: registro con estado ACTIVO, nombre duplicado a 409, desactivación y mantenimiento |
@@ -64,6 +64,7 @@ CREATE UNIQUE INDEX uq_reserva_confirmada
 | `integracion/EscenarioIntegracionTest` | Integración HTTP + PostgreSQL | HU7 y HU8: creación de escenario, validación 400, desactivación a INACTIVO, exclusión de disponibilidad y bloqueo de reservas |
 | `integracion/CancelarReservaIntegracionTest` | Integración HTTP + PostgreSQL | HU5: reserva propia queda CANCELADA en BD; el horario queda libre y otro usuario puede reservarlo; reserva ajena → 422 sin cambios; inexistente → 404 |
 | `integracion/HistorialReservasIntegracionTest` | Integración HTTP + PostgreSQL | HU6: solo reservas del usuario con escenario, fecha, horario y estado; incluye canceladas; sin reservas → lista vacía; usuario inexistente → 404 |
+| `integracion/CasosBordeIntegracionTest` | Integración HTTP + PostgreSQL | Casos borde: fecha pasada → 422 (y hoy sí se permite); otra franja u otro escenario no es conflicto; franja/usuario inexistente → 404; sin fecha → 400; doble cancelación → 422; capacidad 0 → 400; nombre repetido con otras mayúsculas → 409; contraseña corta → 400; login sin importar mayúsculas del correo |
 
 ### Evidencia del problema duro
 

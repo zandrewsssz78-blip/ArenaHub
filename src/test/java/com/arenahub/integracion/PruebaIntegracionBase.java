@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -26,6 +27,11 @@ abstract class PruebaIntegracionBase {
 
     protected static String unico(String prefijo) {
         return prefijo + "-" + UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    /** Fecha relativa a hoy, para que las pruebas no dependan del calendario. */
+    protected static LocalDate enDias(int dias) {
+        return LocalDate.now().plusDays(dias);
     }
 
     protected Long crearUsuario() {

@@ -1,6 +1,8 @@
 package com.arenahub.web;
 
 import com.arenahub.aplicacion.DisponibilidadService;
+import com.arenahub.aplicacion.DisponibilidadService.EscenarioConDisponibilidad;
+import com.arenahub.aplicacion.DisponibilidadService.FranjaConEstado;
 import com.arenahub.aplicacion.EscenarioService;
 import com.arenahub.dominio.EscenarioDeportivo;
 import com.arenahub.dominio.EstadoEscenario;
@@ -36,10 +38,19 @@ public class EscenarioController {
     }
 
     public record FranjaResponse(Long franjaId, LocalTime horaInicio, LocalTime horaFin, boolean ocupada) {
+        static FranjaResponse de(FranjaConEstado f) {
+            return new FranjaResponse(f.franja().getId(), f.franja().getHoraInicio(),
+                    f.franja().getHoraFin(), f.ocupada());
+        }
     }
 
     public record EscenarioDisponibilidadResponse(Long id, String nombre, TipoEscenario tipo, String ubicacion,
                                                   Integer capacidad, List<FranjaResponse> franjas) {
+        static EscenarioDisponibilidadResponse de(EscenarioConDisponibilidad d) {
+            EscenarioDeportivo e = d.escenario();
+            return new EscenarioDisponibilidadResponse(e.getId(), e.getNombre(), e.getTipo(), e.getUbicacion(),
+                    e.getCapacidad(), d.franjas().stream().map(FranjaResponse::de).toList());
+        }
     }
 
     public record CrearEscenarioRequest(
@@ -74,13 +85,7 @@ public class EscenarioController {
     public List<EscenarioDisponibilidadResponse> disponibilidad(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
         return disponibilidad.consultar(fecha).stream()
-                .map(d -> new EscenarioDisponibilidadResponse(
-                        d.escenario().getId(), d.escenario().getNombre(), d.escenario().getTipo(),
-                        d.escenario().getUbicacion(), d.escenario().getCapacidad(),
-                        d.franjas().stream()
-                                .map(f -> new FranjaResponse(f.franja().getId(), f.franja().getHoraInicio(),
-                                        f.franja().getHoraFin(), f.ocupada()))
-                                .toList()))
+                .map(EscenarioDisponibilidadResponse::de)
                 .toList();
     }
 

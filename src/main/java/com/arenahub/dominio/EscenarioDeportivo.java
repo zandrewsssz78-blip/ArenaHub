@@ -40,9 +40,37 @@ public class EscenarioDeportivo {
         this.estado = estado;
     }
 
+    public EscenarioDeportivo(String nombre, TipoEscenario tipo, String ubicacion,
+                              Integer capacidad, String descripcion, EstadoEscenario estado) {
+        this(nombre, tipo, ubicacion, estado);
+        this.capacidad = capacidad;
+        this.descripcion = descripcion;
+    }
+
+    public EscenarioDeportivo(Long id, String nombre, TipoEscenario tipo, String ubicacion,
+                              Integer capacidad, String descripcion, EstadoEscenario estado) {
+        this(nombre, tipo, ubicacion, capacidad, descripcion, estado);
+        this.id = id;
+    }
+
     /** Regla del dominio: solo los escenarios ACTIVOS reciben reservas. */
     public boolean admiteReservas() {
         return estado == EstadoEscenario.ACTIVO;
+    }
+
+    public void desactivar() {
+        this.estado = EstadoEscenario.INACTIVO;
+    }
+
+    public void activar() {
+        this.estado = EstadoEscenario.ACTIVO;
+    }
+
+    public void cambiarEstado(EstadoEscenario nuevoEstado) {
+        if (nuevoEstado == null) {
+            throw new ReglaNegocioException("El nuevo estado no puede ser nulo");
+        }
+        this.estado = nuevoEstado;
     }
 
     public Long getId() { return id; }

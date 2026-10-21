@@ -62,6 +62,8 @@ CREATE UNIQUE INDEX uq_reserva_confirmada
 | `integracion/DisponibilidadEscenariosIntegracionTest` | Integración HTTP + PostgreSQL | HU3: solo escenarios activos; franjas ocupadas marcadas |
 | `integracion/CrearReservaIntegracionTest` | Integración HTTP + PostgreSQL | HU4: confirmada, conflicto 409, escenario inactivo 422 y **evidencia del problema duro** |
 | `integracion/EscenarioIntegracionTest` | Integración HTTP + PostgreSQL | HU7 y HU8: creación de escenario, validación 400, desactivación a INACTIVO, exclusión de disponibilidad y bloqueo de reservas |
+| `integracion/CancelarReservaIntegracionTest` | Integración HTTP + PostgreSQL | HU5: reserva propia queda CANCELADA en BD; el horario queda libre y otro usuario puede reservarlo; reserva ajena → 422 sin cambios; inexistente → 404 |
+| `integracion/HistorialReservasIntegracionTest` | Integración HTTP + PostgreSQL | HU6: solo reservas del usuario con escenario, fecha, horario y estado; incluye canceladas; sin reservas → lista vacía; usuario inexistente → 404 |
 
 ### Evidencia del problema duro
 

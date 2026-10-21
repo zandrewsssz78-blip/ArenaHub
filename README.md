@@ -83,6 +83,7 @@ Detalle del esqueleto andante y cobertura de HU: [`docs/esqueleto-andante.md`](.
 | Problema duro | [`docs/problema-duro.md`](./docs/problema-duro.md) | Concurrencia en reservas: declaración, mecanismo y evidencia |
 | Esqueleto andante | [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md) | Historias implementadas, endpoints y pruebas |
 | Revisión de código | [`docs/revision-codigo.md`](./docs/revision-codigo.md) | Defectos, code smells, SOLID/GRASP y refactorizaciones |
+| Deuda técnica | [`docs/deuda-tecnica.md`](./docs/deuda-tecnica.md) | Deuda identificada, registrada y priorizada |
 | Registro de uso de IA | [`docs/uso-ia.md`](./docs/uso-ia.md) | Sugerencias de IA aceptadas/rechazadas y por qué |
 
 ## Problema duro: Concurrencia

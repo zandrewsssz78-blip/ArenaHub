@@ -8,7 +8,7 @@ import com.arenahub.dominio.TipoEscenario;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -46,7 +46,7 @@ public class EscenarioController {
             @NotBlank @Size(max = 100) String nombre,
             @NotNull TipoEscenario tipo,
             @NotBlank @Size(max = 200) String ubicacion,
-            @PositiveOrZero Integer capacidad,
+            @Positive Integer capacidad,
             @Size(max = 500) String descripcion) {
     }
 

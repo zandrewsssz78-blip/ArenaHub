@@ -54,6 +54,16 @@ public class Reserva {
      */
     public static Reserva confirmar(Usuario usuario, EscenarioDeportivo escenario,
                                     FranjaHoraria franja, LocalDate fecha) {
+        return confirmar(usuario, escenario, franja, fecha, LocalDate.now());
+    }
+
+    /**
+     * Igual que {@link #confirmar(Usuario, EscenarioDeportivo, FranjaHoraria, LocalDate)},
+     * recibiendo "hoy" de forma explícita para poder probar la regla de fechas pasadas
+     * sin depender del reloj del sistema.
+     */
+    public static Reserva confirmar(Usuario usuario, EscenarioDeportivo escenario,
+                                    FranjaHoraria franja, LocalDate fecha, LocalDate hoy) {
         if (!usuario.isActivo()) {
             throw new ReglaNegocioException("El usuario no está activo");
         }
@@ -63,6 +73,9 @@ public class Reserva {
         }
         if (fecha == null) {
             throw new ReglaNegocioException("La fecha de la reserva es obligatoria");
+        }
+        if (fecha.isBefore(hoy)) {
+            throw new ReglaNegocioException("No se puede reservar en una fecha pasada");
         }
         Reserva reserva = new Reserva();
         reserva.codigoReserva = "RES-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();

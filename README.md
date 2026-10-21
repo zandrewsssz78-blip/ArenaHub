@@ -38,22 +38,40 @@ Las tablas las crea **Flyway** al arrancar (`src/main/resources/db/migration`) e
 esquema `arenahub`. Las pruebas usan el esquema `arenahub_test`, que se borra y se
 vuelve a migrar en cada ejecución.
 
-### Probar a mano
+### Probar a mano (Historias de Usuario HU1 - HU8)
 
 ```bash
-# HU1 — registrarse
+# HU1 — Registrarse como nuevo usuario
 curl -X POST localhost:8080/api/usuarios -H "Content-Type: application/json" \
   -d '{"nombre":"Ana","email":"ana@example.com","contrasena":"secreta123"}'
 
-# HU3 — ver escenarios activos y franjas ocupadas en una fecha
+# HU2 — Iniciar sesión (autenticación)
+curl -X POST localhost:8080/api/usuarios/login -H "Content-Type: application/json" \
+  -d '{"email":"ana@example.com","contrasena":"secreta123"}'
+
+# HU3 — Ver escenarios activos y franjas ocupadas en una fecha
 curl "localhost:8080/api/escenarios/disponibilidad?fecha=2026-10-15"
 
-# HU4 — reservar (usuarioId del paso 1, escenarioId y franjaId del paso 2)
+# HU4 — Reservar (usuarioId del paso 1, escenarioId y franjaId del paso 3)
 curl -X POST localhost:8080/api/reservas -H "Content-Type: application/json" \
   -d '{"usuarioId":1,"escenarioId":1,"fecha":"2026-10-15","franjaId":13}'
+
+# HU6 — Ver historial de reservas propias
+curl "localhost:8080/api/reservas?usuarioId=1"
+
+# HU5 — Cancelar una reserva propia (id de reserva del paso anterior)
+curl -X PATCH localhost:8080/api/reservas/1/cancelar -H "Content-Type: application/json" \
+  -d '{"usuarioId":1}'
+
+# HU7 — Registrar nuevo escenario deportivo (Administración)
+curl -X POST localhost:8080/api/escenarios -H "Content-Type: application/json" \
+  -d '{"nombre":"Cancha Sintética 4","tipo":"FUTBOL_5","ubicacion":"Sede Norte","capacidad":10,"descripcion":"Pasto sintético con iluminación LED"}'
+
+# HU8 — Desactivar un escenario deportivo (Mantenimiento)
+curl -X PATCH localhost:8080/api/escenarios/1/desactivar
 ```
 
-Detalle del esqueleto andante: [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md).
+Detalle del esqueleto andante y cobertura de HU: [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md).
 
 ## Estructura de documentación
 
@@ -61,6 +79,7 @@ Detalle del esqueleto andante: [`docs/esqueleto-andante.md`](./docs/esqueleto-an
 |---|---|---|
 | Visión del producto | [`docs/vision-producto.md`](./docs/vision-producto.md) | Usuarios, problema, alcance inicial y restricciones |
 | Acuerdos de equipo | [`docs/acuerdos-equipo.md`](./docs/acuerdos-equipo.md) | Roles, toma de decisiones, política de IA |
+| Historias de usuario | [`docs/historias-usuario.md`](./docs/historias-usuario.md) | Backlog priorizado completo (HU1 - HU8) |
 | Problema duro | [`docs/problema-duro.md`](./docs/problema-duro.md) | Concurrencia en reservas: declaración, mecanismo y evidencia |
 | Esqueleto andante | [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md) | Historias implementadas, endpoints y pruebas |
 | Registro de uso de IA | [`docs/uso-ia.md`](./docs/uso-ia.md) | Sugerencias de IA aceptadas/rechazadas y por qué |
@@ -75,5 +94,7 @@ sincronización) en [`docs/problema-duro.md`](./docs/problema-duro.md).
 
 ## Estado del proyecto
 
-Esqueleto andante con 3 historias funcionales (HU1, HU3, HU4) y la prueba de
-concurrencia del problema duro. Curso de Ingeniería de Software.
+Sistema implementado con las **8 historias funcionales del backlog (HU1 a HU8)**,
+100% desarrollado con **Java 21 LTS** y **Spring Boot 3.5.6**, arquitectura por capas
+(Web REST, Aplicación, Dominio, Persistencia con Spring Data JPA y PostgreSQL 16)
+y la prueba de concurrencia del problema duro con índice único parcial.

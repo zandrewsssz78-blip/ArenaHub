@@ -43,4 +43,42 @@ class ReservaTest {
         assertThatThrownBy(() -> new FranjaHoraria(LocalTime.of(19, 0), LocalTime.of(18, 0)))
                 .isInstanceOf(ReglaNegocioException.class);
     }
+
+    @Test
+    void usuarioPuedeCancelarSuPropiaReserva() {
+        Usuario usuarioConId = new Usuario(1L, "Ana", "ana@example.com", "hash");
+        EscenarioDeportivo cancha = new EscenarioDeportivo("Cancha 1", TipoEscenario.FUTBOL_5, "Sede Norte",
+                EstadoEscenario.ACTIVO);
+        Reserva reserva = Reserva.confirmar(usuarioConId, cancha, franja, fecha);
+
+        reserva.cancelar(1L);
+
+        assertThat(reserva.getEstado()).isEqualTo(EstadoReserva.CANCELADA);
+    }
+
+    @Test
+    void usuarioNoPuedeCancelarReservaDeOtroUsuario() {
+        Usuario usuarioConId = new Usuario(1L, "Ana", "ana@example.com", "hash");
+        EscenarioDeportivo cancha = new EscenarioDeportivo("Cancha 1", TipoEscenario.FUTBOL_5, "Sede Norte",
+                EstadoEscenario.ACTIVO);
+        Reserva reserva = Reserva.confirmar(usuarioConId, cancha, franja, fecha);
+
+        assertThatThrownBy(() -> reserva.cancelar(999L))
+                .isInstanceOf(ReglaNegocioException.class)
+                .hasMessageContaining("No tienes permiso");
+    }
+
+    @Test
+    void reservaYaCanceladaNoSePuedeVolverACancelar() {
+        Usuario usuarioConId = new Usuario(1L, "Ana", "ana@example.com", "hash");
+        EscenarioDeportivo cancha = new EscenarioDeportivo("Cancha 1", TipoEscenario.FUTBOL_5, "Sede Norte",
+                EstadoEscenario.ACTIVO);
+        Reserva reserva = Reserva.confirmar(usuarioConId, cancha, franja, fecha);
+
+        reserva.cancelar(1L);
+
+        assertThatThrownBy(() -> reserva.cancelar(1L))
+                .isInstanceOf(ReglaNegocioException.class)
+                .hasMessageContaining("ya se encuentra cancelada");
+    }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface EscenarioDeportivoRepository extends JpaRepository<EscenarioDeportivo, Long> {
     List<EscenarioDeportivo> findByEstadoOrderByNombreAsc(EstadoEscenario estado);
+    boolean existsByNombreIgnoreCase(String nombre);
 }

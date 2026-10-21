@@ -1,5 +1,6 @@
 package com.arenahub.web;
 
+import com.arenahub.aplicacion.AutenticacionException;
 import com.arenahub.aplicacion.ConflictoException;
 import com.arenahub.aplicacion.RecursoNoEncontradoException;
 import com.arenahub.dominio.ReglaNegocioException;
@@ -19,6 +20,11 @@ import java.util.stream.Collectors;
 public class ManejadorErrores {
 
     public record ErrorResponse(int status, String error, String mensaje) {
+    }
+
+    @ExceptionHandler(AutenticacionException.class)
+    public ResponseEntity<ErrorResponse> autenticacion(AutenticacionException e) {
+        return respuesta(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
     @ExceptionHandler(ConflictoException.class)

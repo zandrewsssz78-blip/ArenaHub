@@ -50,7 +50,7 @@ class ReservaServiceTest {
         usuario = new Usuario(1L, "Carlos", "carlos@example.com", "hash");
         escenario = new EscenarioDeportivo("Cancha 1", TipoEscenario.FUTBOL_5, "Sede Norte", EstadoEscenario.ACTIVO);
         franja = new FranjaHoraria(LocalTime.of(10, 0), LocalTime.of(11, 0));
-        reserva = Reserva.confirmar(usuario, escenario, franja, LocalDate.of(2026, 11, 20));
+        reserva = Reserva.confirmar(usuario, escenario, franja, LocalDate.now().plusDays(5));
     }
 
     @Test

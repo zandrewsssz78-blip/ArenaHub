@@ -1,6 +1,8 @@
 package com.arenahub.web;
 
 import com.arenahub.aplicacion.DisponibilidadService;
+import com.arenahub.aplicacion.DisponibilidadService.EscenarioConDisponibilidad;
+import com.arenahub.aplicacion.DisponibilidadService.FranjaConEstado;
 import com.arenahub.aplicacion.EscenarioService;
 import com.arenahub.dominio.EscenarioDeportivo;
 import com.arenahub.dominio.EstadoEscenario;
@@ -8,7 +10,7 @@ import com.arenahub.dominio.TipoEscenario;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -36,17 +38,26 @@ public class EscenarioController {
     }
 
     public record FranjaResponse(Long franjaId, LocalTime horaInicio, LocalTime horaFin, boolean ocupada) {
+        static FranjaResponse de(FranjaConEstado f) {
+            return new FranjaResponse(f.franja().getId(), f.franja().getHoraInicio(),
+                    f.franja().getHoraFin(), f.ocupada());
+        }
     }
 
     public record EscenarioDisponibilidadResponse(Long id, String nombre, TipoEscenario tipo, String ubicacion,
                                                   Integer capacidad, List<FranjaResponse> franjas) {
+        static EscenarioDisponibilidadResponse de(EscenarioConDisponibilidad d) {
+            EscenarioDeportivo e = d.escenario();
+            return new EscenarioDisponibilidadResponse(e.getId(), e.getNombre(), e.getTipo(), e.getUbicacion(),
+                    e.getCapacidad(), d.franjas().stream().map(FranjaResponse::de).toList());
+        }
     }
 
     public record CrearEscenarioRequest(
             @NotBlank @Size(max = 100) String nombre,
             @NotNull TipoEscenario tipo,
             @NotBlank @Size(max = 200) String ubicacion,
-            @PositiveOrZero Integer capacidad,
+            @Positive Integer capacidad,
             @Size(max = 500) String descripcion) {
     }
 
@@ -74,13 +85,7 @@ public class EscenarioController {
     public List<EscenarioDisponibilidadResponse> disponibilidad(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
         return disponibilidad.consultar(fecha).stream()
-                .map(d -> new EscenarioDisponibilidadResponse(
-                        d.escenario().getId(), d.escenario().getNombre(), d.escenario().getTipo(),
-                        d.escenario().getUbicacion(), d.escenario().getCapacidad(),
-                        d.franjas().stream()
-                                .map(f -> new FranjaResponse(f.franja().getId(), f.franja().getHoraInicio(),
-                                        f.franja().getHoraFin(), f.ocupada()))
-                                .toList()))
+                .map(EscenarioDisponibilidadResponse::de)
                 .toList();
     }
 

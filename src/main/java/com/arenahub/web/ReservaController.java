@@ -54,11 +54,6 @@ public class ReservaController {
             LocalDate fecha,
             EstadoReserva estado) {
 
-        public ReservaResponse(Long id, String codigoReserva, Long usuarioId, Long escenarioId,
-                               Long franjaId, LocalDate fecha, EstadoReserva estado) {
-            this(id, codigoReserva, usuarioId, escenarioId, null, franjaId, null, null, fecha, estado);
-        }
-
         static ReservaResponse de(Reserva r) {
             return new ReservaResponse(
                     r.getId(),

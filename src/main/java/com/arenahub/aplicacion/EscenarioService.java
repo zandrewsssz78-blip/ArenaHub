@@ -44,28 +44,31 @@ public class EscenarioService {
 
     @Transactional
     public EscenarioDeportivo desactivar(Long id) {
-        EscenarioDeportivo escenario = escenarios.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Escenario " + id + " no existe"));
+        EscenarioDeportivo escenario = buscar(id);
         escenario.desactivar();
         return escenarios.save(escenario);
     }
 
     @Transactional
     public EscenarioDeportivo cambiarEstado(Long id, EstadoEscenario nuevoEstado) {
-        EscenarioDeportivo escenario = escenarios.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Escenario " + id + " no existe"));
+        EscenarioDeportivo escenario = buscar(id);
         escenario.cambiarEstado(nuevoEstado);
         return escenarios.save(escenario);
     }
 
     @Transactional(readOnly = true)
     public EscenarioDeportivo obtenerPorId(Long id) {
-        return escenarios.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Escenario " + id + " no existe"));
+        return buscar(id);
     }
 
     @Transactional(readOnly = true)
     public List<EscenarioDeportivo> listarTodos() {
         return escenarios.findAll();
+    }
+
+    /** Único punto que traduce "no existe" a RecursoNoEncontradoException (antes repetido 3 veces). */
+    private EscenarioDeportivo buscar(Long id) {
+        return escenarios.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Escenario " + id + " no existe"));
     }
 }

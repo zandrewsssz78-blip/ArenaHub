@@ -23,7 +23,7 @@ class CrearReservaIntegracionTest extends PruebaIntegracionBase {
     @Test
     void horarioLibreQuedaConfirmado() {
         Long escenario = crearEscenario("ACTIVO");
-        LocalDate fecha = LocalDate.of(2026, 12, 1);
+        LocalDate fecha = enDias(41);
 
         ResponseEntity<ReservaResponse> respuesta = http.postForEntity("/api/reservas",
                 new CrearReservaRequest(crearUsuario(), escenario, fecha, franjaDeLas(10)), ReservaResponse.class);
@@ -36,7 +36,7 @@ class CrearReservaIntegracionTest extends PruebaIntegracionBase {
     @Test
     void horarioYaReservadoSeRechazaConConflicto() {
         Long escenario = crearEscenario("ACTIVO");
-        LocalDate fecha = LocalDate.of(2026, 12, 2);
+        LocalDate fecha = enDias(42);
         Long franja = franjaDeLas(11);
         http.postForEntity("/api/reservas",
                 new CrearReservaRequest(crearUsuario(), escenario, fecha, franja), String.class);
@@ -53,7 +53,7 @@ class CrearReservaIntegracionTest extends PruebaIntegracionBase {
         Long escenario = crearEscenario("EN_MANTENIMIENTO");
 
         ResponseEntity<String> respuesta = http.postForEntity("/api/reservas",
-                new CrearReservaRequest(crearUsuario(), escenario, LocalDate.of(2026, 12, 3), franjaDeLas(9)),
+                new CrearReservaRequest(crearUsuario(), escenario, enDias(43), franjaDeLas(9)),
                 String.class);
 
         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -68,7 +68,7 @@ class CrearReservaIntegracionTest extends PruebaIntegracionBase {
     @Test
     void veinteSolicitudesSimultaneasSoloConfirmanUna() throws Exception {
         Long escenario = crearEscenario("ACTIVO");
-        LocalDate fecha = LocalDate.of(2026, 12, 24);
+        LocalDate fecha = enDias(64);
         Long franja = franjaDeLas(18);
         List<Long> usuarios = new ArrayList<>();
         for (int i = 0; i < SOLICITUDES; i++) {

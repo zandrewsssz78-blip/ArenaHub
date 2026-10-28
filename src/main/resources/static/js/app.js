@@ -1,49 +1,42 @@
 /**
- * ArenaHub — Aplicación Principal (Módulo 0)
- * Orquestador de vistas, navegación, notificaciones y estado base
+ * ArenaHub — Lógica de Interfaz y Navegación
+ * Proyecto de Ingeniería de Software — UTADEO
  */
 
 import { api } from './api.js';
 import { auth } from './auth.js';
 
-// Sistema de Notificaciones Toast
-export function showToast(message, type = 'info') {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
+// Muestra una notificación temporal en la esquina inferior
+export function mostrarAlerta(mensaje, tipo = 'info') {
+  const contenedor = document.getElementById('contenedor-alertas');
+  if (!contenedor) return;
 
-  const toast = document.createElement('div');
-  toast.className = `toast toast-${type}`;
+  const alerta = document.createElement('div');
+  alerta.className = `alerta alerta-${tipo}`;
+  alerta.textContent = mensaje;
 
-  const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
-  toast.innerHTML = `
-    <span style="font-weight: bold; font-size: 1.1rem;">${icon}</span>
-    <span>${message}</span>
-  `;
-
-  container.appendChild(toast);
+  contenedor.appendChild(alerta);
 
   setTimeout(() => {
-    toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(100%)';
-    setTimeout(() => toast.remove(), 400);
-  }, 3500);
+    alerta.style.opacity = '0';
+    alerta.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => alerta.remove(), 300);
+  }, 3200);
 }
 
-// Navegación entre vistas (SPA)
-export function navigateTo(viewId) {
-  const views = document.querySelectorAll('.view-section');
-  views.forEach(v => v.classList.remove('active'));
+// Cambia la pestaña o vista visible en pantalla
+export function cambiarVista(idVista) {
+  const vistas = document.querySelectorAll('.vista');
+  vistas.forEach(v => v.classList.remove('activa'));
 
-  const target = document.getElementById(viewId);
-  if (target) {
-    target.classList.add('active');
+  const objetivo = document.getElementById(idVista);
+  if (objetivo) {
+    objetivo.classList.add('activa');
   }
 
-  // Actualizar enlaces de navegación activos
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    if (link.dataset.view === viewId) {
+  // Actualizar el enlace activo en el menú
+  document.querySelectorAll('.nav-link').forEach(link => {
+    if (link.dataset.vista === idVista) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
@@ -53,63 +46,97 @@ export function navigateTo(viewId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Inicialización de la aplicación
+// Inicialización de la interfaz
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🚀 ArenaHub Frontend v0.1 inicializado');
-
-  // Enlaces de navegación
-  document.querySelectorAll('[data-view]').forEach(elem => {
+  // Manejo de clics en el menú de navegación
+  document.querySelectorAll('[data-vista]').forEach(elem => {
     elem.addEventListener('click', (e) => {
       e.preventDefault();
-      const targetView = elem.dataset.view;
-      navigateTo(targetView);
+      cambiarVista(elem.dataset.vista);
     });
   });
 
-  // Suscripción a cambios de autenticación
-  auth.onAuthStateChanged((user) => {
-    const authContainer = document.getElementById('navbar-auth-section');
-    if (!authContainer) return;
+  // Reaccionar al estado de sesión del usuario
+  auth.onAuthStateChanged((usuario) => {
+    const contenedorUsuario = document.getElementById('nav-seccion-usuario');
+    if (!contenedorUsuario) return;
 
-    if (user) {
-      authContainer.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <div style="text-align: right;">
-            <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-main);">${user.nombre}</div>
-            <div style="font-size: 0.72rem; color: var(--primary); text-transform: uppercase;">${user.rol || 'JUGADOR'}</div>
-          </div>
-          <button id="btn-logout" class="btn btn-secondary btn-sm" title="Cerrar sesión">
-            Cerrar Sesión
-          </button>
-        </div>
+    if (usuario) {
+      contenedorUsuario.innerHTML = `
+        <span style="font-size: 0.9rem; color: var(--color-texto); font-weight: 500;">
+          ${usuario.nombre}
+        </span>
+        <button id="btn-cerrar-sesion" class="btn btn-outline btn-sm">
+          Salir
+        </button>
       `;
-      document.getElementById('btn-logout')?.addEventListener('click', () => {
+      document.getElementById('btn-cerrar-sesion')?.addEventListener('click', () => {
         auth.cerrarSesion();
-        showToast('Has cerrado sesión correctamente', 'info');
-        navigateTo('view-home');
+        mostrarAlerta('Has cerrado sesión', 'info');
+        cambiarVista('vista-inicio');
       });
     } else {
-      authContainer.innerHTML = `
-        <button class="btn btn-secondary btn-sm" data-view="view-login">Iniciar Sesión</button>
-        <button class="btn btn-primary btn-sm" data-view="view-registro">Registrarse</button>
+      contenedorUsuario.innerHTML = `
+        <button class="btn btn-outline btn-sm" data-vista="vista-login">Iniciar Sesión</button>
+        <button class="btn btn-verde btn-sm" data-vista="vista-registro">Registrarse</button>
       `;
-      // Reasignar eventos a los botones recién inyectados
-      authContainer.querySelectorAll('[data-view]').forEach(btn => {
-        btn.addEventListener('click', () => navigateTo(btn.dataset.view));
+      contenedorUsuario.querySelectorAll('[data-vista]').forEach(btn => {
+        btn.addEventListener('click', () => cambiarVista(btn.dataset.vista));
       });
     }
   });
 
-  // Comprobar estado de conexión con el backend
-  const statusIndicator = document.getElementById('backend-status');
-  if (statusIndicator) {
-    const isOnline = await api.pingBackend();
-    if (isOnline) {
-      statusIndicator.className = 'badge badge-green';
-      statusIndicator.innerHTML = '<span class="status-dot"></span> Backend Spring Boot Conectado';
-    } else {
-      statusIndicator.className = 'badge badge-amber';
-      statusIndicator.innerHTML = '<span class="status-dot"></span> Backend Desconectado (Verifica docker y mvnw)';
-    }
-  }
+  // Cargar las canchas iniciales en la vista de inicio
+  cargarCanchasInicio();
 });
+
+// Carga las canchas registradas para mostrarlas de forma natural
+async function cargarCanchasInicio() {
+  const contenedor = document.getElementById('lista-canchas-inicio');
+  if (!contenedor) return;
+
+  try {
+    const escenarios = await api.getEscenarios();
+    if (!escenarios || escenarios.length === 0) {
+      contenedor.innerHTML = '<p style="color: var(--color-texto-secundario);">No hay canchas registradas en este momento.</p>';
+      return;
+    }
+
+    contenedor.innerHTML = escenarios.map(cancha => {
+      const estadoClase = cancha.estado === 'ACTIVO' ? 'etiqueta-activo' :
+                          cancha.estado === 'EN_MANTENIMIENTO' ? 'etiqueta-mantenimiento' : 'etiqueta-inactivo';
+      const estadoTexto = cancha.estado === 'ACTIVO' ? 'Disponible' :
+                          cancha.estado === 'EN_MANTENIMIENTO' ? 'En Mantenimiento' : 'Inactivo';
+
+      return `
+        <div class="tarjeta">
+          <div>
+            <div class="tarjeta-header">
+              <h3 class="tarjeta-titulo">${cancha.nombre}</h3>
+              <span class="etiqueta ${estadoClase}">${estadoTexto}</span>
+            </div>
+            <p class="tarjeta-descripcion">${cancha.descripcion || 'Sin descripción disponible.'}</p>
+            <div class="tarjeta-detalles">
+              <span>📍 Ubicación: ${cancha.ubicacion}</span>
+              <span>👥 Capacidad: ${cancha.capacidad || 10} personas</span>
+              <span>⚽ Tipo: ${cancha.tipo}</span>
+            </div>
+          </div>
+          <div class="tarjeta-footer">
+            <span class="etiqueta etiqueta-deporte">${cancha.tipo}</span>
+            <button class="btn btn-verde btn-sm" onclick="window.seleccionarCancha(${cancha.id})">
+              Ver Horarios
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    contenedor.innerHTML = '<p style="color: var(--color-texto-secundario);">Inicia el servidor Spring Boot para cargar los escenarios en vivo.</p>';
+  }
+}
+
+// Función global para cuando el usuario hace clic en "Ver Horarios"
+window.seleccionarCancha = (id) => {
+  cambiarVista('vista-canchas');
+};

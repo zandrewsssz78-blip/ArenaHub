@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArenaHub — Reserva de Escenarios Deportivos Universitarios</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ======================================================= -->
+  <!-- 1. ENCABEZADO Y NAVEGACIÓN (AZUL MARINO PROFUNDO)       -->
+  <!-- ======================================================= -->
+  <header class="header-navbar">
+    <div class="navbar-container">
+      <a class="nav-brand" data-nav="view-inicio">
+        <div class="brand-badge-icon">A</div>
+        <div class="brand-text-group">
+          <div class="brand-title">Arena<span>Hub</span></div>
+          <span class="brand-subtitle">Complejo Deportivo</span>
+        </div>
+      </a>
+
+      <!-- Menú de Navegación Principal -->
+      <nav>
+        <ul class="nav-menu" id="nav-main-menu">
+          <li><a class="nav-link active" data-nav="view-inicio">Inicio</a></li>
+          <li><a class="nav-link" data-nav="view-escenarios">Escenarios Deportivos</a></li>
+          <li><a class="nav-link" data-nav="view-reservas">Mis Reservas</a></li>
+          <li><a class="nav-link" data-nav="view-admin">Administración</a></li>
+        </ul>
+      </nav>
+
+      <!-- Botones de Acción / Sesión de Usuario -->
+      <div class="nav-actions" id="nav-user-actions">
+        <button class="btn btn-ghost-nav btn-sm" id="btn-header-login">Iniciar Sesión</button>
+        <button class="btn btn-primary btn-sm" id="btn-header-register">Crear Cuenta</button>
+      </div>
+
+      <!-- Botón Menú Móvil -->
+      <button class="mobile-toggle" id="mobile-menu-toggle" aria-label="Abrir menú de navegación">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================= -->
+  <!-- 2. SECCIÓN PRINCIPAL / HERO DIRECTO Y EDITORIAL         -->
+  <!-- ======================================================= -->
+  <section class="hero-section" id="hero-banner-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <span class="hero-kicker">Disponibilidad en Tiempo Real</span>
+        <h1 class="hero-title">
+          Reserva tu próximo partido.
+        </h1>
+        <p class="hero-subtitle">
+          Consulta en tiempo real la disponibilidad de canchas de fútbol, baloncesto y tenis del campus. Selecciona tu franja horaria y asegura tu turno de forma rápida y sencilla.
+        </p>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-primary btn-lg" id="btn-hero-explore">
+            Explorar Escenarios
+          </button>
+          <button class="btn btn-secondary btn-lg" id="btn-hero-bookings">
+            Mis Reservas
+          </button>
+        </div>
+
+        <div class="hero-features-list">
+          <div class="hero-feature-item">
+            <span>⚽</span> <span><strong>Fútbol 5 y 11</strong></span>
+          </div>
+          <div class="hero-feature-item">
+            <span>🏀</span> <span><strong>Baloncesto</strong></span>
+          </div>
+          <div class="hero-feature-item">
+            <span>🎾</span> <span><strong>Tenis y Pádel</strong></span>
+          </div>
+          <div class="hero-feature-item">
+            <span>⏱️</span> <span><strong>Turnos de 1 hora</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fotografía Real de Cancha Deportiva Universitaria -->
+      <div class="hero-photo-card">
+        <img src="img/campus-turf.png" alt="Cancha Sintética Deportiva Campus Universitario" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80';">
+        <div class="hero-photo-caption">
+          <span><strong>Cancha Sintética Principal</strong> · Sede Central</span>
+          <span style="color: var(--accent-green-text); font-weight: 600;">Césped Aprobado</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= -->
+  <!-- 3. CONTENEDOR PRINCIPAL DE LA APLICACIÓN               -->
+  <!-- ======================================================= -->
+  <main class="main-wrapper">
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: ESCENARIOS DEPORTIVOS Y CATÁLOGO               -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-escenarios-section" class="view-section active">
+      
+      <!-- Panel de Búsqueda y Filtros Deportivos (EL PROTAGONISTA) -->
+      <div class="search-filter-section">
+        
+        <!-- Pestañas rápidas por Deporte (Estilo SaleFutbol / Ngeball) -->
+        <div class="sport-tabs-bar" id="sport-tabs-container">
+          <button type="button" class="sport-tab-btn active" data-sport="">Todos</button>
+          <button type="button" class="sport-tab-btn" data-sport="FUTBOL_5">⚽ Fútbol 5</button>
+          <button type="button" class="sport-tab-btn" data-sport="BALONCESTO">🏀 Baloncesto</button>
+          <button type="button" class="sport-tab-btn" data-sport="TENIS">🎾 Tenis</button>
+          <button type="button" class="sport-tab-btn" data-sport="VOLEIBOL">🏐 Voleibol</button>
+          <button type="button" class="sport-tab-btn" data-sport="FUTBOL">⚽ Fútbol 11</button>
+        </div>
+
+        <!-- Controles de Búsqueda y Filtros -->
+        <div class="filter-grid">
+          <!-- Búsqueda por Nombre -->
+          <div class="filter-control">
+            <label for="search-court-name">Buscar Cancha</label>
+            <input type="text" id="search-court-name" class="input-box" placeholder="Ej: Cancha Sintética 1, Coliseo...">
+          </div>
+
+          <!-- Filtro por Deporte (Sincronizado) -->
+          <div class="filter-control">
+            <label for="filter-sport-type">Deporte</label>
+            <select id="filter-sport-type" class="select-box">
+              <option value="">Todos los Deportes</option>
+              <option value="FUTBOL_5">Fútbol 5</option>
+              <option value="BALONCESTO">Baloncesto</option>
+              <option value="TENIS">Tenis</option>
+              <option value="VOLEIBOL">Voleibol</option>
+              <option value="FUTBOL">Fútbol 11</option>
+              <option value="OTRO">Otro</option>
+            </select>
+          </div>
+
+          <!-- Filtro por Sede / Ubicación -->
+          <div class="filter-control">
+            <label for="filter-location-type">Sede / Ubicación</label>
+            <select id="filter-location-type" class="select-box">
+              <option value="">Todas las Sedes</option>
+              <option value="Sede Central">Sede Central</option>
+              <option value="Sede Norte">Sede Norte</option>
+              <option value="Sede Campestre">Sede Campestre</option>
+            </select>
+          </div>
+
+          <!-- Selector de Fecha para Disponibilidad -->
+          <div class="filter-control">
+            <label for="filter-booking-date">Fecha de Reserva</label>
+            <input type="date" id="filter-booking-date" class="input-box">
+          </div>
+
+          <!-- Filtro por Estado (Oculto o Accesible) -->
+          <div class="filter-control" style="display: none;">
+            <label for="filter-court-status">Estado</label>
+            <select id="filter-court-status" class="select-box">
+              <option value="" selected>Todos</option>
+              <option value="ACTIVO">Solo Disponibles</option>
+              <option value="EN_MANTENIMIENTO">En Mantenimiento</option>
+              <option value="INACTIVO">Inactivos</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera del Catálogo -->
+      <div class="catalog-header-bar">
+        <h2 class="catalog-title">
+          Canchas Disponibles
+          <span class="catalog-count-pill" id="courts-count-pill">Cargando...</span>
+        </h2>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+          Selecciona un horario disponible para reservar tu turno
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Tarjetas de Escenarios -->
+      <div class="courts-grid" id="courts-cards-container">
+        <!-- Renderizado dinámico desde app.js con datos reales de la API -->
+        <p style="color: var(--text-secondary); grid-column: 1 / -1; padding: 2rem 0; text-align: center;">
+          Cargando escenarios deportivos...
+        </p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: MIS RESERVAS                                   -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-reservas-section" class="view-section">
+      <div class="view-header">
+        <div>
+          <h2 class="view-title">Mis Reservas</h2>
+          <p class="view-subtitle">
+            Historial de tus turnos reservados con confirmación en base de datos.
+          </p>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btn-refresh-reservas">Actualizar</button>
+      </div>
+
+      <div class="reservations-container" id="user-reservations-container">
+        <!-- Rellenado dinámicamente con reservas reales -->
+        <div class="reservation-item-card">
+          <p style="color: var(--text-secondary);">Inicia sesión para consultar tus reservas activas.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: ADMINISTRACIÓN                                 -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-admin-section" class="view-section">
+      <div class="view-header">
+        <div>
+          <h2 class="view-title">Panel de Administración</h2>
+          <p class="view-subtitle">
+            Gestión de inventario de escenarios deportivos universitarios y control de mantenimiento.
+          </p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+        <!-- Formulario Crear Cancha -->
+        <div class="admin-card">
+          <h3 class="admin-card-title">
+            Registrar Nuevo Escenario Deportivo
+          </h3>
+          <form id="form-register-court">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+              <div class="form-group">
+                <label class="form-label" for="admin-court-name">Nombre de la Cancha *</label>
+                <input type="text" id="admin-court-name" class="form-control" placeholder="Ej: Cancha de Tenis Norte" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="admin-court-sport">Deporte *</label>
+                <select id="admin-court-sport" class="form-control" required>
+                  <option value="FUTBOL_5">Fútbol 5</option>
+                  <option value="BALONCESTO">Baloncesto</option>
+                  <option value="TENIS">Tenis</option>
+                  <option value="VOLEIBOL">Voleibol</option>
+                  <option value="FUTBOL">Fútbol 11</option>
+                  <option value="OTRO">Otro</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="admin-court-location">Sede / Ubicación *</label>
+                <input type="text" id="admin-court-location" class="form-control" placeholder="Ej: Sede Central - Complejo 2" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="admin-court-capacity">Capacidad de Jugadores</label>
+                <input type="number" id="admin-court-capacity" class="form-control" value="10" min="1">
+              </div>
+
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label" for="admin-court-desc">Descripción / Observaciones</label>
+                <input type="text" id="admin-court-desc" class="form-control" placeholder="Césped sintético de alta densidad con iluminación LED nocturna...">
+              </div>
+            </div>
+
+            <div style="margin-top: 0.5rem;">
+              <button type="submit" class="btn btn-primary" id="btn-submit-court">
+                Registrar Escenario
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Lista de Canchas para Control de Mantenimiento -->
+        <div class="admin-card">
+          <h3 class="admin-card-title">
+            Inventario y Estado de Canchas
+          </h3>
+          <div id="admin-courts-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <p style="color: var(--text-secondary);">Cargando inventario de escenarios...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================= -->
+  <!-- 4. MODAL DE CONFIRMACIÓN DE RESERVA                     -->
+  <!-- ======================================================= -->
+  <div class="modal-overlay" id="modal-booking-confirm">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Confirmar Reserva de Cancha</h3>
+        <button class="modal-close-btn" id="btn-close-booking-modal" aria-label="Cerrar modal">✕</button>
+      </div>
+
+      <div class="booking-summary-box">
+        <div><strong style="color: var(--text-muted);">Cancha:</strong> <span id="summary-court-name" style="font-weight: 700; color: var(--text-main);">-</span></div>
+        <div><strong style="color: var(--text-muted);">Deporte:</strong> <span id="summary-court-sport" style="color: var(--accent-green-text); font-weight: 600;">-</span></div>
+        <div><strong style="color: var(--text-muted);">Fecha:</strong> <span id="summary-court-date" style="font-weight: 600;">-</span></div>
+        <div><strong style="color: var(--text-muted);">Horario:</strong> <span id="summary-court-time" style="font-weight: 600;">-</span></div>
+        <div><strong style="color: var(--text-muted);">Usuario:</strong> <span id="summary-court-user" style="color: var(--text-main);">-</span></div>
+      </div>
+
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+        Al confirmar, se registrará el turno en la base de datos de ArenaHub y ningún otro usuario podrá ocupar este horario.
+      </p>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button class="btn btn-secondary" id="btn-cancel-booking-modal">Cancelar</button>
+        <button class="btn btn-primary" id="btn-execute-booking">Confirmar Reserva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- 5. MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO)            -->
+  <!-- ======================================================= -->
+  <div class="modal-overlay" id="modal-auth-dialog">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="auth-modal-heading">Iniciar Sesión</h3>
+        <button class="modal-close-btn" id="btn-close-auth-modal" aria-label="Cerrar modal">✕</button>
+      </div>
+
+      <!-- FORMULARIO DE INICIO DE SESIÓN -->
+      <form id="form-user-login">
+        <div class="form-group">
+          <label class="form-label" for="login-user-email">Correo Electrónico Institucional</label>
+          <input type="email" id="login-user-email" class="form-control" placeholder="usuario@utadeo.edu.co" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-user-password">Contraseña</label>
+          <input type="password" id="login-user-password" class="form-control" placeholder="Tu contraseña" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="btn-submit-login">
+          Iniciar Sesión
+        </button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.86rem; color: var(--text-secondary);">
+          ¿No tienes una cuenta? <a id="switch-to-register" style="color: var(--accent-green-text); font-weight: 600; cursor: pointer; text-decoration: underline;">Crear una cuenta</a>
+        </p>
+      </form>
+
+      <!-- FORMULARIO DE REGISTRO DE USUARIO -->
+      <form id="form-user-register" style="display: none;">
+        <div class="form-group">
+          <label class="form-label" for="reg-user-name">Nombre Completo</label>
+          <input type="text" id="reg-user-name" class="form-control" placeholder="Ej: Andrés Rubiano" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-user-email">Correo Electrónico Institucional</label>
+          <input type="email" id="reg-user-email" class="form-control" placeholder="andres.rubiano@utadeo.edu.co" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-user-password">Contraseña</label>
+          <input type="password" id="reg-user-password" class="form-control" placeholder="Mínimo 8 caracteres" required minlength="8">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="btn-submit-register">
+          Registrarme
+        </button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.86rem; color: var(--text-secondary);">
+          ¿Ya tienes cuenta? <a id="switch-to-login" style="color: var(--accent-green-text); font-weight: 600; cursor: pointer; text-decoration: underline;">Iniciar sesión</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenedor de Alertas Flotantes (Toast Stack) -->
+  <div class="toast-stack" id="toast-stack-container"></div>
+
+  <!-- ======================================================= -->
+  <!-- 6. PIE DE PÁGINA (FOOTER INSTITUCIONAL)                 -->
+  <!-- ======================================================= -->
+  <footer class="footer-section">
+    <div class="footer-container">
+      <div>
+        <strong style="color: var(--text-main); font-size: 0.92rem;">ArenaHub</strong> — Plataforma de Gestión de Reservas Deportivas
+        <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.2rem;">
+          Ingeniería de Software · Universidad Jorge Tadeo Lozano (UTADEO)
+        </div>
+      </div>
+      <div style="text-align: right;">
+        Autores: <strong style="color: var(--text-main);">Ana Sofía Siachoque</strong> y <strong style="color: var(--text-main);">Andrés Felipe Rubiano Duarte</strong>
+        <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.2rem;">
+          Java 21 LTS · Spring Boot 3.5.6 · PostgreSQL 16
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Modular de la Aplicación -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

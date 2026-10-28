@@ -1,22 +1,34 @@
 /* ==========================================================
-   ArenaHub — Estilos del Frontend
-   Ingeniería de Software — Universidad Jorge Tadeo Lozano
-   Autores: Ana Sofía Siachoque y Andrés Felipe Rubiano
+   ArenaHub — Dashboard Minimalista de Reservas Deportivas
+   Inspirado en diseño moderno: Sidebar lateral + Filtros superiores + Tarjetas de Canchas
    ========================================================== */
 
-/* Variables de color y tipografía del proyecto */
 :root {
-  --color-fondo: #0f172a;       /* Fondo oscuro pizarra */
-  --color-tarjeta: #1e293b;     /* Fondo de contenedores y tarjetas */
-  --color-tarjeta-hover: #243248;
-  --color-borde: #334155;       /* Bordes sutiles */
-  --color-verde: #10b981;       /* Verde institucional para acciones principales */
-  --color-verde-hover: #059669;
-  --color-azul: #3b82f6;        /* Azul de apoyo */
-  --color-rojo: #ef4444;        /* Rojo para cancelaciones o alertas */
-  --color-texto: #f8fafc;       /* Texto principal blanco suave */
-  --color-texto-secundario: #94a3b8; /* Gris claro para subtítulos */
-  --fuente: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+  --bg-app: #0e131b;            /* Fondo base oscuro profundo */
+  --bg-sidebar: #121822;        /* Fondo del menú lateral */
+  --bg-card: #171f2c;           /* Fondo de las tarjetas de canchas */
+  --bg-card-hover: #1c2637;     /* Hover en tarjeta */
+  --bg-input: #1b2331;          /* Fondo de los selects y filtros */
+  --border-color: #242e3f;      /* Bordes sutiles entre secciones */
+  --border-light: #323f54;
+  
+  --mint: #10b981;              /* Verde menta principal */
+  --mint-hover: #059669;
+  --mint-bg: rgba(16, 185, 129, 0.15);
+  
+  --amber: #f59e0b;             /* Naranja alta demanda / mantenimiento */
+  --amber-bg: rgba(245, 158, 11, 0.15);
+  
+  --red: #ef4444;               /* Rojo para cancelaciones */
+  --red-bg: rgba(239, 68, 68, 0.15);
+  
+  --text-primary: #f8fafc;      /* Texto blanco suave */
+  --text-secondary: #94a3b8;    /* Gris texto secundario */
+  --text-muted: #64748b;        /* Gris tenue */
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 }
 
 * {
@@ -26,371 +38,483 @@
 }
 
 body {
-  font-family: var(--fuente);
-  background-color: var(--color-fondo);
-  color: var(--color-texto);
-  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
 }
 
-/* =========================================
-   Barra de Navegación
-   ========================================= */
-.navbar {
-  background-color: #111c2e;
-  border-bottom: 1px solid var(--color-borde);
-  padding: 0.85rem 1.5rem;
+/* ==========================================================
+   1. SIDEBAR LATERAL (Barra izquierda fija)
+   ========================================================== */
+.sidebar {
+  width: 230px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 1rem;
   position: sticky;
   top: 0;
-  z-index: 100;
+  height: 100vh;
+  flex-shrink: 0;
 }
 
-.navbar-container {
-  max-width: 1140px;
-  margin: 0 auto;
+.sidebar-logo {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
+  padding: 0 0.5rem;
+  margin-bottom: 2rem;
   text-decoration: none;
-  color: var(--color-texto);
-  font-size: 1.25rem;
-  font-weight: 700;
   cursor: pointer;
 }
 
-.logo-badge {
-  background-color: var(--color-verde);
-  color: #064e3b;
-  font-size: 0.8rem;
-  font-weight: 800;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}
-
-.nav-menu {
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #10b981, #3b82f6);
+  border-radius: 8px;
   display: flex;
-  list-style: none;
-  gap: 0.4rem;
-}
-
-.nav-link {
-  color: var(--color-texto-secundario);
-  text-decoration: none;
-  padding: 0.45rem 0.85rem;
-  border-radius: 6px;
-  font-size: 0.92rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.nav-link:hover {
-  color: var(--color-texto);
-  background-color: var(--color-tarjeta);
-}
-
-.nav-link.active {
-  color: var(--color-verde);
-  background-color: rgba(16, 185, 129, 0.12);
-}
-
-.nav-usuario {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-/* =========================================
-   Botones
-   ========================================= */
-.btn {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border-radius: 6px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background-color 0.15s, border-color 0.15s;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #042f2e;
 }
 
-.btn-verde {
-  background-color: var(--color-verde);
-  color: #052e16;
-}
-
-.btn-verde:hover {
-  background-color: var(--color-verde-hover);
-}
-
-.btn-outline {
-  background-color: transparent;
-  border-color: var(--color-borde);
-  color: var(--color-texto);
-}
-
-.btn-outline:hover {
-  background-color: var(--color-tarjeta);
-  border-color: var(--color-texto-secundario);
-}
-
-.btn-rojo {
-  background-color: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.4);
-  color: #fca5a5;
-}
-
-.btn-rojo:hover {
-  background-color: var(--color-rojo);
-  color: white;
-}
-
-.btn-sm {
-  padding: 0.3rem 0.7rem;
-  font-size: 0.82rem;
-}
-
-/* =========================================
-   Contenedor Principal
-   ========================================= */
-.contenedor {
-  max-width: 1140px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 1.8rem 1.5rem 3rem 1.5rem;
-  flex: 1;
-}
-
-/* =========================================
-   Sección de Bienvenida (Header simple)
-   ========================================= */
-.cabecera-seccion {
-  margin-bottom: 2rem;
-}
-
-.cabecera-seccion h1 {
-  font-size: 1.8rem;
+.logo-name {
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.4rem;
-  color: var(--color-texto);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
-.cabecera-seccion p {
-  color: var(--color-texto-secundario);
-  font-size: 1rem;
-  max-width: 700px;
-}
-
-/* =========================================
-   Tarjetas de Canchas y Contenidos
-   ========================================= */
-.tarjetas-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.4rem;
-  margin-top: 1rem;
-}
-
-.tarjeta {
-  background-color: var(--color-tarjeta);
-  border: 1px solid var(--color-borde);
-  border-radius: 8px;
-  padding: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.tarjeta-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.8rem;
-}
-
-.tarjeta-titulo {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--color-texto);
-}
-
-.tarjeta-descripcion {
-  color: var(--color-texto-secundario);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.tarjeta-detalles {
+.sidebar-menu {
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  font-size: 0.85rem;
-  color: var(--color-texto-secundario);
-  margin-bottom: 1.2rem;
 }
 
-.tarjeta-detalles span {
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.menu-item:hover {
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.menu-item.active {
+  background-color: #1e2634;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.menu-item svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.8;
+}
+
+.menu-item.active svg {
+  color: var(--mint);
+  opacity: 1;
+}
+
+/* Sección inferior del sidebar (Usuario) */
+.sidebar-footer {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+.user-profile-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.4rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--mint);
+  text-transform: uppercase;
+}
+
+/* ==========================================================
+   2. CONTENIDO PRINCIPAL (Panel derecho)
+   ========================================================== */
+.main-wrapper {
+  flex: 1;
+  padding: 2rem 2.2rem 3rem 2.2rem;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* Cabecera de la vista */
+.view-header {
+  margin-bottom: 1.5rem;
+}
+
+.view-title {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+  color: var(--text-primary);
+}
+
+/* ==========================================================
+   3. BARRA DE FILTROS SUPERIORES
+   ========================================================== */
+.filters-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.filter-select,
+.filter-input {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  min-width: 140px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  border-color: var(--mint);
+}
+
+/* ==========================================================
+   4. REJILLA DE TARJETAS DE CANCHAS
+   ========================================================== */
+.courts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 1.4rem;
+}
+
+.court-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.court-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Imagen con badge flotante */
+.court-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 145px;
+  background-color: #1e2634;
+}
+
+.court-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.court-status-pill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+
+.pill-available {
+  background-color: rgba(16, 185, 129, 0.85);
+  color: #ffffff;
+}
+
+.pill-maintenance {
+  background-color: rgba(245, 158, 11, 0.85);
+  color: #ffffff;
+}
+
+.pill-inactive {
+  background-color: rgba(239, 68, 68, 0.85);
+  color: #ffffff;
+}
+
+/* Contenido de la tarjeta */
+.court-body {
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.court-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.court-meta {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
 }
 
-.tarjeta-footer {
-  border-top: 1px solid var(--color-borde);
-  padding-top: 0.9rem;
+.court-type {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Píldoras de horarios disponibles */
+.time-slots-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
 }
 
-/* Etiquetas (Chips / Badges) */
-.etiqueta {
-  display: inline-block;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.etiqueta-activo {
+.time-slot-pill {
   background-color: rgba(16, 185, 129, 0.15);
   color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-.etiqueta-mantenimiento {
-  background-color: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
+.time-slot-pill:hover,
+.time-slot-pill.selected {
+  background-color: var(--mint);
+  color: #042f2e;
+  border-color: var(--mint);
 }
 
-.etiqueta-inactivo {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+.time-slot-pill.occupied {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border-color: transparent;
+  cursor: not-allowed;
+  text-decoration: line-through;
 }
 
-.etiqueta-deporte {
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
+/* Botón de acción Reservar Ahora */
+.btn-book {
+  width: 100%;
+  background-color: var(--mint);
+  color: #042f2e;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  margin-top: auto;
 }
 
-/* =========================================
-   Vistas Dinámicas (Pestañas)
-   ========================================= */
-.vista {
+.btn-book:hover {
+  background-color: var(--mint-hover);
+}
+
+.btn-book:disabled {
+  background-color: #242e3f;
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* ==========================================================
+   5. OTRAS VISTAS (Mis Reservas, Login, Admin)
+   ========================================================== */
+.view-panel {
   display: none;
 }
 
-.vista.activa {
+.view-panel.active {
   display: block;
 }
 
-/* =========================================
-   Formularios
-   ========================================= */
-.formulario-caja {
-  max-width: 440px;
+/* Tarjetas de reservas del usuario */
+.reservation-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+/* Formularios limpios */
+.form-card {
+  max-width: 460px;
   margin: 1.5rem auto;
-  background-color: var(--color-tarjeta);
-  border: 1px solid var(--color-borde);
-  border-radius: 8px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
   padding: 2rem;
 }
 
-.campo-form {
+.form-group {
   margin-bottom: 1.2rem;
 }
 
-.campo-form label {
+.form-label {
   display: block;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 0.4rem;
-  color: var(--color-texto);
+  color: var(--text-primary);
 }
 
-.campo-form input,
-.campo-form select,
-.campo-form textarea {
+.form-control {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid var(--color-borde);
-  background-color: #0b1322;
-  color: var(--color-texto);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
   font-size: 0.9rem;
-  font-family: inherit;
-}
-
-.campo-form input:focus,
-.campo-form select:focus,
-.campo-form textarea:focus {
   outline: none;
-  border-color: var(--color-verde);
 }
 
-/* =========================================
-   Alertas Flotantes (Notificaciones)
-   ========================================= */
-.contenedor-alertas {
+.form-control:focus {
+  border-color: var(--mint);
+}
+
+/* Modales */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  width: 90%;
+  max-width: 440px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Alertas Toast */
+.toast-stack {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  z-index: 999;
+  z-index: 2000;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.alerta {
-  background-color: var(--color-tarjeta);
-  border: 1px solid var(--color-borde);
-  color: var(--color-texto);
-  padding: 0.8rem 1.1rem;
-  border-radius: 6px;
+.toast-item {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--mint);
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
   font-size: 0.88rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  max-width: 360px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
 }
 
-.alerta-exito {
-  border-left: 4px solid var(--color-verde);
+.toast-item.error {
+  border-left-color: var(--red);
 }
 
-.alerta-error {
-  border-left: 4px solid var(--color-rojo);
-}
-
-.alerta-info {
-  border-left: 4px solid var(--color-azul);
-}
-
-/* =========================================
-   Pie de Página
-   ========================================= */
-.footer {
-  background-color: #0b1322;
-  border-top: 1px solid var(--color-borde);
-  padding: 1.4rem 1.5rem;
+/* Botones auxiliares */
+.btn-secondary {
+  background-color: #242e3f;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
-  color: var(--color-texto-secundario);
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.footer-contenido {
-  max-width: 1140px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.8rem;
+.btn-secondary:hover {
+  background-color: #2d3a4e;
 }

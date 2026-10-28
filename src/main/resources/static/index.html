@@ -3,240 +3,265 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ArenaHub — Reserva de Escenarios Deportivos</title>
+  <title>ArenaHub — Explorar y Reservar Canchas</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- Barra de navegación principal -->
-  <header class="navbar">
-    <div class="navbar-container">
-      <a class="logo" data-vista="vista-inicio">
-        ArenaHub <span class="logo-badge">Deportes</span>
+  <!-- ======================================================= -->
+  <!-- 1. SIDEBAR LATERAL IZQUIERDO                            -->
+  <!-- ======================================================= -->
+  <aside class="sidebar">
+    <div>
+      <!-- Logo -->
+      <a class="sidebar-logo" data-view="view-explorar">
+        <div class="logo-icon">A</div>
+        <span class="logo-name">ArenaHub</span>
       </a>
 
-      <nav>
-        <ul class="nav-menu">
-          <li><a class="nav-link active" data-vista="vista-inicio">Inicio</a></li>
-          <li><a class="nav-link" data-vista="vista-canchas">Canchas y Horarios</a></li>
-          <li><a class="nav-link" data-vista="vista-reservas">Mis Reservas</a></li>
-          <li><a class="nav-link" data-vista="vista-admin">Administración</a></li>
-        </ul>
-      </nav>
-
-      <div class="nav-usuario" id="nav-seccion-usuario">
-        <button class="btn btn-outline btn-sm" data-vista="vista-login">Iniciar Sesión</button>
-        <button class="btn btn-verde btn-sm" data-vista="vista-registro">Registrarse</button>
-      </div>
+      <!-- Menú de Navegación Vertical -->
+      <ul class="sidebar-menu">
+        <li>
+          <a class="menu-item active" data-view="view-explorar">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Explorar
+          </a>
+        </li>
+        <li>
+          <a class="menu-item" data-view="view-reservas">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Mis Reservas
+          </a>
+        </li>
+        <li>
+          <a class="menu-item" data-view="view-admin">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Administración
+          </a>
+        </li>
+      </ul>
     </div>
-  </header>
 
-  <!-- Contenido principal -->
-  <main class="contenedor">
+    <!-- Pie del sidebar (Usuario / Sesión) -->
+    <div class="sidebar-footer" id="sidebar-user-section">
+      <button class="btn-secondary" style="width: 100%;" id="btn-open-login">
+        Iniciar Sesión
+      </button>
+    </div>
+  </aside>
 
-    <!-- ======================================================= -->
-    <!-- VISTA: INICIO / EXPLORADOR                              -->
-    <!-- ======================================================= -->
-    <section id="vista-inicio" class="vista activa">
-      <div class="cabecera-seccion">
-        <h1>Reserva de Escenarios Deportivos</h1>
-        <p>
-          Selecciona una cancha, consulta los horarios disponibles por fecha y confirma tu turno de manera rápida.
-        </p>
-      </div>
+  <!-- ======================================================= -->
+  <!-- 2. CONTENIDO PRINCIPAL                                  -->
+  <!-- ======================================================= -->
+  <main class="main-wrapper">
 
-      <!-- Listado dinámico de canchas cargadas desde el backend -->
-      <div id="lista-canchas-inicio" class="tarjetas-grid">
-        <!-- Las tarjetas se cargan automáticamente desde app.js -->
-        <p style="color: var(--color-texto-secundario);">Cargando escenarios deportivos...</p>
-      </div>
-    </section>
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: EXPLORAR CANCHAS                               -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-explorar" class="view-panel active">
+      <div class="view-header">
+        <h1 class="view-title">Explorar Canchas</h1>
 
-    <!-- ======================================================= -->
-    <!-- VISTA: CANCHAS Y HORARIOS (DISPONIBILIDAD)              -->
-    <!-- ======================================================= -->
-    <section id="vista-canchas" class="vista">
-      <div class="cabecera-seccion">
-        <h1>Consulta de Disponibilidad</h1>
-        <p>Elige una fecha para ver qué horarios están libres en cada uno de los escenarios.</p>
-      </div>
-
-      <div class="tarjeta" style="margin-bottom: 1.5rem;">
-        <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-          <div style="flex: 1; min-width: 200px;">
-            <label style="display: block; font-size: 0.88rem; margin-bottom: 0.4rem; color: var(--color-texto-secundario);">
-              Fecha de consulta:
-            </label>
-            <input type="date" id="filtro-fecha" style="width: 100%; padding: 0.55rem 0.8rem; background-color: #0b1322; border: 1px solid var(--color-borde); color: white; border-radius: 6px;">
-          </div>
-          <button class="btn btn-verde" id="btn-consultar-fecha">Consultar Horarios</button>
-        </div>
-      </div>
-
-      <div id="contenedor-disponibilidad-horarios">
-        <p style="color: var(--color-texto-secundario); font-size: 0.92rem;">
-          Selecciona una fecha y haz clic en Consultar Horarios para ver las franjas disponibles.
-        </p>
-      </div>
-    </section>
-
-    <!-- ======================================================= -->
-    <!-- VISTA: MIS RESERVAS                                     -->
-    <!-- ======================================================= -->
-    <section id="vista-reservas" class="vista">
-      <div class="cabecera-seccion">
-        <h1>Mis Reservas</h1>
-        <p>Historial de turnos solicitados y opciones para cancelar si no puedes asistir.</p>
-      </div>
-
-      <div class="tarjeta">
-        <div id="lista-mis-reservas">
-          <p style="color: var(--color-texto-secundario); font-size: 0.92rem;">
-            Inicia sesión con tu cuenta para ver tus reservas activas y pasadas.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ======================================================= -->
-    <!-- VISTA: INICIAR SESIÓN                                   -->
-    <!-- ======================================================= -->
-    <section id="vista-login" class="vista">
-      <div class="formulario-caja">
-        <h2 style="margin-bottom: 0.5rem; text-align: center;">Iniciar Sesión</h2>
-        <p style="color: var(--color-texto-secundario); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
-          Ingresa a tu cuenta de usuario
-        </p>
-
-        <form id="form-login">
-          <div class="campo-form">
-            <label for="login-email">Correo Electrónico</label>
-            <input type="email" id="login-email" placeholder="usuario@ejemplo.com" required>
-          </div>
-
-          <div class="campo-form">
-            <label for="login-password">Contraseña</label>
-            <input type="password" id="login-password" placeholder="Tu contraseña" required>
-          </div>
-
-          <button type="submit" class="btn btn-verde" style="width: 100%; margin-top: 0.5rem;">
-            Entrar
-          </button>
-        </form>
-
-        <p style="text-align: center; font-size: 0.85rem; color: var(--color-texto-secundario); margin-top: 1.2rem;">
-          ¿No tienes cuenta? <a href="#" data-vista="vista-registro" style="color: var(--color-verde); text-decoration: none;">Regístrate aquí</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- ======================================================= -->
-    <!-- VISTA: REGISTRO DE USUARIO                              -->
-    <!-- ======================================================= -->
-    <section id="vista-registro" class="vista">
-      <div class="formulario-caja">
-        <h2 style="margin-bottom: 0.5rem; text-align: center;">Crear Cuenta</h2>
-        <p style="color: var(--color-texto-secundario); font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">
-          Regístrate para reservar canchas deportivas
-        </p>
-
-        <form id="form-registro">
-          <div class="campo-form">
-            <label for="reg-nombre">Nombre Completo</label>
-            <input type="text" id="reg-nombre" placeholder="Ej: Carlos Mendoza" required>
-          </div>
-
-          <div class="campo-form">
-            <label for="reg-email">Correo Electrónico</label>
-            <input type="email" id="reg-email" placeholder="carlos@ejemplo.com" required>
-          </div>
-
-          <div class="campo-form">
-            <label for="reg-password">Contraseña</label>
-            <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres" required minlength="8">
-          </div>
-
-          <button type="submit" class="btn btn-verde" style="width: 100%; margin-top: 0.5rem;">
-            Registrarme
-          </button>
-        </form>
-
-        <p style="text-align: center; font-size: 0.85rem; color: var(--color-texto-secundario); margin-top: 1.2rem;">
-          ¿Ya tienes cuenta? <a href="#" data-vista="vista-login" style="color: var(--color-verde); text-decoration: none;">Inicia sesión</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- ======================================================= -->
-    <!-- VISTA: ADMINISTRACIÓN                                   -->
-    <!-- ======================================================= -->
-    <section id="vista-admin" class="vista">
-      <div class="cabecera-seccion">
-        <h1>Administración de Escenarios</h1>
-        <p>Registra nuevas instalaciones deportivas o actualiza el estado de las existentes.</p>
-      </div>
-
-      <div class="tarjeta">
-        <h3 style="margin-bottom: 1rem;">Registrar Nueva Cancha</h3>
-        <form id="form-crear-cancha" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
-          <div class="campo-form" style="margin-bottom: 0;">
-            <label for="admin-nombre">Nombre del Escenario</label>
-            <input type="text" id="admin-nombre" placeholder="Ej: Cancha de Voleibol 2" required>
-          </div>
-
-          <div class="campo-form" style="margin-bottom: 0;">
-            <label for="admin-tipo">Tipo de Deporte</label>
-            <select id="admin-tipo" required>
-              <option value="FUTBOL_5">Fútbol 5</option>
-              <option value="FUTBOL">Fútbol 11</option>
-              <option value="BALONCESTO">Baloncesto</option>
-              <option value="VOLEIBOL">Voleibol</option>
-              <option value="TENIS">Tenis</option>
-              <option value="OTRO">Otro</option>
+        <!-- Barra de Filtros Minimalista -->
+        <div class="filters-bar">
+          <div class="filter-group">
+            <label class="filter-label" for="filter-ubicacion">Ubicación</label>
+            <select id="filter-ubicacion" class="filter-select">
+              <option value="">Todas las Sedes</option>
+              <option value="Sede Norte">Sede Norte</option>
+              <option value="Sede Central">Sede Central</option>
+              <option value="Sede Campestre">Sede Campestre</option>
             </select>
           </div>
 
-          <div class="campo-form" style="margin-bottom: 0;">
-            <label for="admin-ubicacion">Ubicación</label>
-            <input type="text" id="admin-ubicacion" placeholder="Ej: Sede Norte - Canchas Exteriores" required>
+          <div class="filter-group">
+            <label class="filter-label" for="filter-deporte">Deporte</label>
+            <select id="filter-deporte" class="filter-select">
+              <option value="">Todos los Deportes</option>
+              <option value="FUTBOL_5">Fútbol 5</option>
+              <option value="BALONCESTO">Baloncesto</option>
+              <option value="FUTBOL">Fútbol 11</option>
+              <option value="TENIS">Tenis</option>
+              <option value="VOLEIBOL">Voleibol</option>
+            </select>
           </div>
 
-          <div class="campo-form" style="margin-bottom: 0;">
-            <label for="admin-capacidad">Capacidad máxima</label>
-            <input type="number" id="admin-capacidad" placeholder="10" min="1" value="10">
+          <div class="filter-group">
+            <label class="filter-label" for="filter-fecha">Fecha</label>
+            <input type="date" id="filter-fecha" class="filter-input">
           </div>
 
-          <div class="campo-form" style="grid-column: 1 / -1; margin-bottom: 0;">
-            <label for="admin-descripcion">Descripción / Observaciones</label>
-            <input type="text" id="admin-descripcion" placeholder="Pasto sintético con iluminación nocturna...">
+          <div class="filter-group">
+            <label class="filter-label" for="filter-hora">Hora</label>
+            <select id="filter-hora" class="filter-select">
+              <option value="todo">Todos los Horarios</option>
+              <option value="manana">Mañana (06:00 - 12:00)</option>
+              <option value="tarde">Tarde (12:00 - 18:00)</option>
+              <option value="noche" selected>Noche (18:00 - 22:00)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rejilla de Tarjetas de Canchas -->
+      <div id="courts-grid-container" class="courts-grid">
+        <p style="color: var(--text-secondary); grid-column: 1 / -1;">Cargando escenarios deportivos...</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: MIS RESERVAS                                   -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-reservas" class="view-panel">
+      <div class="view-header">
+        <h1 class="view-title">Mis Reservas</h1>
+      </div>
+
+      <div id="user-reservations-list">
+        <p style="color: var(--text-secondary);">Inicia sesión para consultar tus reservas activas.</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA: ADMINISTRACIÓN                                 -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-admin" class="view-panel">
+      <div class="view-header">
+        <h1 class="view-title">Panel de Administración</h1>
+      </div>
+
+      <div class="form-card" style="margin-left: 0; max-width: 650px;">
+        <h3 style="margin-bottom: 1.2rem; font-size: 1.1rem;">Registrar Nuevo Escenario</h3>
+        <form id="form-admin-crear">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="new-nombre">Nombre de la Cancha</label>
+              <input type="text" id="new-nombre" class="form-control" placeholder="Ej: Pista de Pádel 1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="new-tipo">Deporte</label>
+              <select id="new-tipo" class="form-control" required>
+                <option value="FUTBOL_5">Fútbol 5</option>
+                <option value="BALONCESTO">Baloncesto</option>
+                <option value="TENIS">Tenis</option>
+                <option value="VOLEIBOL">Voleibol</option>
+                <option value="FUTBOL">Fútbol 11</option>
+              </select>
+            </div>
           </div>
 
-          <div style="grid-column: 1 / -1; margin-top: 0.5rem;">
-            <button type="submit" class="btn btn-verde">Guardar Escenario</button>
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="new-ubicacion">Ubicación</label>
+              <input type="text" id="new-ubicacion" class="form-control" placeholder="Ej: Sede Norte - Canchas 3 y 4" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="new-capacidad">Capacidad</label>
+              <input type="number" id="new-capacidad" class="form-control" value="10" min="1">
+            </div>
           </div>
+
+          <div class="form-group">
+            <label class="form-label" for="new-descripcion">Descripción</label>
+            <input type="text" id="new-descripcion" class="form-control" placeholder="Cancha de césped sintético con reflectores LED">
+          </div>
+
+          <button type="submit" class="btn-book" style="margin-top: 0.5rem; width: auto; padding: 0.6rem 1.4rem;">
+            Guardar Escenario
+          </button>
         </form>
       </div>
     </section>
 
   </main>
 
-  <!-- Notificaciones flotantes simples -->
-  <div id="contenedor-alertas" class="contenedor-alertas"></div>
+  <!-- ======================================================= -->
+  <!-- MODAL DE CONFIRMACIÓN DE RESERVA                        -->
+  <!-- ======================================================= -->
+  <div id="booking-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 0.4rem; font-size: 1.2rem;">Confirmar Reserva</h3>
+      <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.4rem;" id="modal-court-subtitle">
+        Cancha y horario seleccionados
+      </p>
 
-  <!-- Pie de página universitario -->
-  <footer class="footer">
-    <div class="footer-contenido">
-      <div>
-        <strong>ArenaHub</strong> · Sistema de Reserva de Escenarios Deportivos
-        <div style="font-size: 0.8rem; margin-top: 0.2rem;">
-          Ingeniería de Software · Universidad Jorge Tadeo Lozano (UTADEO)
-        </div>
+      <div style="background-color: #121822; padding: 1rem; border-radius: 8px; margin-bottom: 1.4rem; font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.4rem;">
+        <div><strong>Cancha:</strong> <span id="modal-court-name">-</span></div>
+        <div><strong>Fecha:</strong> <span id="modal-court-date">-</span></div>
+        <div><strong>Horario:</strong> <span id="modal-court-time">-</span></div>
+        <div><strong>Usuario:</strong> <span id="modal-court-user">-</span></div>
       </div>
-      <div>
-        Desarrollado por: <strong>Ana Sofía Siachoque</strong> y <strong>Andrés Felipe Rubiano Duarte</strong>
+
+      <div style="display: flex; gap: 0.8rem; justify-content: flex-end;">
+        <button class="btn-secondary" id="modal-btn-cancel">Cancelar</button>
+        <button class="btn-book" id="modal-btn-confirm" style="width: auto; padding: 0.6rem 1.2rem;">
+          Confirmar Reserva
+        </button>
       </div>
     </div>
-  </footer>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- MODAL DE INICIO DE SESIÓN / REGISTRO                    -->
+  <!-- ======================================================= -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+        <h3 id="auth-modal-title" style="font-size: 1.2rem;">Iniciar Sesión</h3>
+        <button id="auth-modal-close" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;">✕</button>
+      </div>
+
+      <!-- Formulario Login -->
+      <form id="auth-form-login">
+        <div class="form-group">
+          <label class="form-label" for="auth-email">Correo Electrónico</label>
+          <input type="email" id="auth-email" class="form-control" placeholder="usuario@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="auth-password">Contraseña</label>
+          <input type="password" id="auth-password" class="form-control" placeholder="Tu contraseña" required>
+        </div>
+        <button type="submit" class="btn-book" style="width: 100%; margin-top: 0.5rem;">
+          Entrar
+        </button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.82rem; color: var(--text-secondary);">
+          ¿No tienes cuenta? <a id="link-show-register" style="color: var(--mint); cursor: pointer;">Crear una cuenta</a>
+        </p>
+      </form>
+
+      <!-- Formulario Registro -->
+      <form id="auth-form-register" style="display: none;">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Nombre Completo</label>
+          <input type="text" id="reg-name" class="form-control" placeholder="Ej: Andrés Duarte" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Correo Electrónico</label>
+          <input type="email" id="reg-email" class="form-control" placeholder="andres@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Contraseña</label>
+          <input type="password" id="reg-password" class="form-control" placeholder="Mínimo 8 caracteres" required minlength="8">
+        </div>
+        <button type="submit" class="btn-book" style="width: 100%; margin-top: 0.5rem;">
+          Crear Cuenta
+        </button>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.82rem; color: var(--text-secondary);">
+          ¿Ya tienes cuenta? <a id="link-show-login" style="color: var(--mint); cursor: pointer;">Iniciar sesión</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones Toast -->
+  <div id="toast-stack" class="toast-stack"></div>
 
   <script type="module" src="js/app.js"></script>
 </body>

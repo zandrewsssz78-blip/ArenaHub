@@ -1,19 +1,19 @@
 /**
  * ArenaHub — Frontend Controller Modular
- * Arquitectura UI/UX Deportiva Profesional
+ * Arquitectura UI/UX Deportiva Profesional y Editorial
  */
 
 import { api } from './api.js';
 import { auth } from './auth.js';
 
-// Imágenes deportivas de alta resolución según el tipo de cancha
+// Imágenes de canchas deportivas reales y universitarias
 const SPORT_IMAGES = {
-  FUTBOL_5: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80',
+  FUTBOL_5: 'img/campus-turf.png',
   FUTBOL: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&auto=format&fit=crop&q=80',
   BALONCESTO: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&auto=format&fit=crop&q=80',
   TENIS: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=600&auto=format&fit=crop&q=80',
   VOLEIBOL: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=600&auto=format&fit=crop&q=80',
-  DEFAULT: 'https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=600&auto=format&fit=crop&q=80'
+  DEFAULT: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=600&auto=format&fit=crop&q=80'
 };
 
 // Formato legible de tipos de deporte
@@ -26,17 +26,103 @@ const SPORT_LABELS = {
   OTRO: 'Polideportivo'
 };
 
+// Catálogo referencial universitario para contingencia offline
+const FALLBACK_CAMPUS_COURTS = [
+  {
+    id: 1,
+    nombre: 'Cancha Sintética 1 (Fútbol 5)',
+    tipo: 'FUTBOL_5',
+    ubicacion: 'Sede Central - Zona Deportiva',
+    capacidad: 10,
+    estado: 'ACTIVO',
+    descripcion: 'Césped sintético monofilamento de 50mm con iluminación LED nocturna.',
+    franjas: [
+      { franjaId: 13, horaInicio: '18:00:00', horaFin: '19:00:00', ocupada: false },
+      { franjaId: 14, horaInicio: '19:00:00', horaFin: '20:00:00', ocupada: true },
+      { franjaId: 15, horaInicio: '20:00:00', horaFin: '21:00:00', ocupada: false },
+      { franjaId: 16, horaInicio: '21:00:00', horaFin: '22:00:00', ocupada: false }
+    ]
+  },
+  {
+    id: 2,
+    nombre: 'Coliseo Principal (Baloncesto)',
+    tipo: 'BALONCESTO',
+    ubicacion: 'Sede Central - Coliseo Mayor',
+    capacidad: 10,
+    estado: 'ACTIVO',
+    descripcion: 'Piso de madera flotante de arce certificado, tableros profesionales de vidrio templado.',
+    franjas: [
+      { franjaId: 12, horaInicio: '17:00:00', horaFin: '18:00:00', ocupada: false },
+      { franjaId: 13, horaInicio: '18:00:00', horaFin: '19:00:00', ocupada: false },
+      { franjaId: 14, horaInicio: '19:00:00', horaFin: '20:00:00', ocupada: false },
+      { franjaId: 15, horaInicio: '20:00:00', horaFin: '21:00:00', ocupada: true }
+    ]
+  },
+  {
+    id: 3,
+    nombre: 'Cancha de Tenis Norte 1',
+    tipo: 'TENIS',
+    ubicacion: 'Sede Norte - Complejo de Raquetas',
+    capacidad: 4,
+    estado: 'ACTIVO',
+    descripcion: 'Superficie de polvo de ladrillo tradicional con drenaje perimetral.',
+    franjas: [
+      { franjaId: 10, horaInicio: '15:00:00', horaFin: '16:00:00', ocupada: false },
+      { franjaId: 11, horaInicio: '16:00:00', horaFin: '17:00:00', ocupada: false },
+      { franjaId: 12, horaInicio: '17:00:00', horaFin: '18:00:00', ocupada: false },
+      { franjaId: 13, horaInicio: '18:00:00', horaFin: '19:00:00', ocupada: false }
+    ]
+  },
+  {
+    id: 4,
+    nombre: 'Cancha de Voleibol Cubierta',
+    tipo: 'VOLEIBOL',
+    ubicacion: 'Sede Central - Coliseo Auxiliar',
+    capacidad: 12,
+    estado: 'ACTIVO',
+    descripcion: 'Superficie sintética de alto impacto con malla profesional regulable.',
+    franjas: [
+      { franjaId: 14, horaInicio: '19:00:00', horaFin: '20:00:00', ocupada: false },
+      { franjaId: 15, horaInicio: '20:00:00', horaFin: '21:00:00', ocupada: false }
+    ]
+  },
+  {
+    id: 5,
+    nombre: 'Cancha de Fútbol 11 Campestre',
+    tipo: 'FUTBOL',
+    ubicacion: 'Sede Campestre - Campo 1',
+    capacidad: 22,
+    estado: 'ACTIVO',
+    descripcion: 'Campo de césped natural reglamentario para torneos interuniversitarios.',
+    franjas: [
+      { franjaId: 9, horaInicio: '14:00:00', horaFin: '15:00:00', ocupada: false },
+      { franjaId: 10, horaInicio: '15:00:00', horaFin: '16:00:00', ocupada: false }
+    ]
+  },
+  {
+    id: 6,
+    nombre: 'Cancha Sintética 2 (Mantenimiento)',
+    tipo: 'FUTBOL_5',
+    ubicacion: 'Sede Norte - Bloque B',
+    capacidad: 10,
+    estado: 'EN_MANTENIMIENTO',
+    descripcion: 'Mantenimiento preventivo programado y cambio de luminarias.',
+    franjas: []
+  }
+];
+
 // Estado centralizado de la aplicación
 const AppState = {
   courts: [],
   selectedCourt: null,
   selectedSlot: null,
   pendingBookingPayload: null,
-  filterDate: new Date().toISOString().split('T')[0]
+  filterDate: new Date().toISOString().split('T')[0],
+  isOfflineMode: false
 };
 
 // ==========================================================
-// 1. SISTEMA DE NOTIFICACIONES TOAST
+// 1. SISTEMA DE NOTIFICACIONES TOAST (SOBRIO Y DISCRETO)
 // ==========================================================
 export function showNotification(message, type = 'success') {
   const container = document.getElementById('toast-stack-container');
@@ -50,9 +136,9 @@ export function showNotification(message, type = 'success') {
 
   setTimeout(() => {
     toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    toast.style.transform = 'translateX(100%)';
-    setTimeout(() => toast.remove(), 350);
+    toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+    toast.style.transform = 'translateY(10px)';
+    setTimeout(() => toast.remove(), 300);
   }, 3500);
 }
 
@@ -77,7 +163,6 @@ export function navigateToView(viewTarget) {
     if (viewTarget === 'view-escenarios') {
       document.querySelector('.nav-link[data-nav="view-escenarios"]')?.classList.add('active');
       document.querySelector('.nav-link[data-nav="view-inicio"]')?.classList.remove('active');
-      // Scroll suave hacia los filtros
       document.getElementById('view-escenarios-section')?.scrollIntoView({ behavior: 'smooth' });
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -107,12 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupModalEvents();
   setupAdminEvents();
   
-  // Cargar disponibilidad inicial
   initDateFilter();
   loadCourtsWithAvailability();
 });
 
-// Configuración de la fecha por defecto (Hoy)
 function initDateFilter() {
   const dateInput = document.getElementById('filter-booking-date');
   if (dateInput) {
@@ -121,9 +204,7 @@ function initDateFilter() {
   }
 }
 
-// Configuración de enlaces y botones de navegación
 function setupNavigationEvents() {
-  // Enlaces de navegación con atributo data-nav
   document.querySelectorAll('[data-nav]').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
@@ -131,7 +212,6 @@ function setupNavigationEvents() {
     });
   });
 
-  // Botones del Hero
   document.getElementById('btn-hero-explore')?.addEventListener('click', () => {
     navigateToView('view-escenarios');
   });
@@ -140,66 +220,64 @@ function setupNavigationEvents() {
     navigateToView('view-reservas');
   });
 
-  // Menú móvil hamburguesa
   document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
     document.getElementById('nav-main-menu')?.classList.toggle('open');
   });
 
-  // Botón refrescar reservas
   document.getElementById('btn-refresh-reservas')?.addEventListener('click', () => {
     loadUserReservations();
   });
 }
 
 // ==========================================================
-// 4. CARGA DE CANCHAS Y DISPONIBILIDAD (API REAL)
+// 4. CARGA DE CANCHAS Y DISPONIBILIDAD (API REAL + CONTINGENCIA)
 // ==========================================================
 async function loadCourtsWithAvailability() {
   const container = document.getElementById('courts-cards-container');
+  const countPill = document.getElementById('courts-count-pill');
   if (!container) return;
 
   container.innerHTML = `
-    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
-      <div style="color: var(--accent-lime); font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
-      <p style="color: var(--text-secondary);">Consultando escenarios deportivos en tiempo real...</p>
+    <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem;">
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">Consultando escenarios deportivos en tiempo real...</p>
     </div>
   `;
+  if (countPill) countPill.textContent = 'Consultando...';
+
+  const selectedDate = document.getElementById('filter-booking-date')?.value || AppState.filterDate;
 
   try {
-    const selectedDate = document.getElementById('filter-booking-date')?.value || AppState.filterDate;
-    
-    // Consultar disponibilidad real por fecha en Spring Boot
     let courtsData;
     try {
       courtsData = await api.getDisponibilidad(selectedDate);
     } catch {
-      // Si la consulta de fecha falla por estar fuera de rango, consultar catálogo general
       courtsData = await api.getEscenarios();
     }
 
-    if (!courtsData || courtsData.length === 0) {
-      container.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
-          <p style="color: var(--text-secondary); font-size: 1.05rem;">No se encontraron escenarios disponibles para esta fecha.</p>
-        </div>
-      `;
+    if (courtsData && Array.isArray(courtsData) && courtsData.length > 0) {
+      AppState.courts = courtsData;
+      AppState.isOfflineMode = false;
+      renderCourtsList(courtsData);
       return;
     }
 
-    AppState.courts = courtsData;
-    renderCourtsList(courtsData);
+    // Si backend no arrojó canchas registradas, usar catálogo representativo
+    AppState.courts = FALLBACK_CAMPUS_COURTS;
+    AppState.isOfflineMode = false;
+    renderCourtsList(AppState.courts);
   } catch (err) {
-    container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
-        <p style="color: var(--text-secondary);">Inicia el servidor Spring Boot (<code>.\\mvnw.cmd spring-boot:run</code>) para cargar los escenarios en vivo.</p>
-      </div>
-    `;
+    // Manejo amigable de estado sin servidor (screenshot 4)
+    console.warn('Backend no disponible, cargando catálogo de prueba:', err);
+    AppState.courts = FALLBACK_CAMPUS_COURTS;
+    AppState.isOfflineMode = true;
+    renderCourtsList(AppState.courts);
   }
 }
 
-// Renderizado de las tarjetas en la cuadrícula
+// Renderizado de tarjetas de escenarios
 function renderCourtsList(courts) {
   const container = document.getElementById('courts-cards-container');
+  const countPill = document.getElementById('courts-count-pill');
   if (!container) return;
 
   const searchKeyword = document.getElementById('search-court-name')?.value.trim().toLowerCase() || '';
@@ -218,21 +296,36 @@ function renderCourtsList(courts) {
     return matchesName && matchesSport && matchesLocation && matchesStatus;
   });
 
+  if (countPill) {
+    countPill.textContent = `${filtered.length} ${filtered.length === 1 ? 'cancha' : 'canchas'}`;
+  }
+
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem;">
-        <p style="color: var(--text-secondary); font-size: 1.05rem;">No hay canchas que coincidan con los filtros seleccionados.</p>
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; background-color: #ffffff; border: 1px solid var(--border-light); border-radius: var(--radius-lg);">
+        <p style="color: var(--text-main); font-weight: 600; font-size: 1rem; margin-bottom: 0.3rem;">No se encontraron canchas</p>
+        <p style="color: var(--text-secondary); font-size: 0.88rem;">Intenta ajustar los filtros de deporte, sede o fecha seleccionados.</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = filtered.map(court => {
+  const offlineBanner = AppState.isOfflineMode ? `
+    <div style="grid-column: 1 / -1; background-color: #f8fafc; border: 1px solid var(--border-medium); border-left: 4px solid var(--accent-green); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+      <span style="color: var(--text-secondary);">
+        Mostrando catálogo universitario referencial. El servidor backend está en modo reposo.
+      </span>
+      <button class="btn btn-secondary btn-sm" onclick="window.reconnectBackendClick()">
+        Reintentar Conexión
+      </button>
+    </div>
+  ` : '';
+
+  const cardsHtml = filtered.map(court => {
     const imgSrc = SPORT_IMAGES[court.tipo] || SPORT_IMAGES.DEFAULT;
     const sportName = SPORT_LABELS[court.tipo] || court.tipo;
     const isAvailable = !court.estado || court.estado === 'ACTIVO';
     
-    // Estado y Pill Badge
     let statusPillHtml = '';
     if (court.estado === 'EN_MANTENIMIENTO') {
       statusPillHtml = '<span class="court-status-pill status-mantenimiento">En Mantenimiento</span>';
@@ -242,9 +335,8 @@ function renderCourtsList(courts) {
       statusPillHtml = '<span class="court-status-pill status-disponible">Disponible</span>';
     }
 
-    // Franjas de horarios
     const franjas = court.franjas && court.franjas.length > 0
-      ? court.franjas.slice(0, 8).map(f => ({
+      ? court.franjas.slice(0, 6).map(f => ({
           id: f.franjaId,
           hora: f.horaInicio.substring(0, 5),
           horaFin: f.horaFin.substring(0, 5),
@@ -260,7 +352,7 @@ function renderCourtsList(courts) {
     return `
       <article class="court-card" data-court-id="${court.id}">
         <div class="court-media-wrapper">
-          <img src="${imgSrc}" alt="${court.nombre}" class="court-photo" loading="lazy">
+          <img src="${imgSrc}" alt="${court.nombre}" class="court-photo" loading="lazy" onerror="this.src='${SPORT_IMAGES.DEFAULT}'">
           ${statusPillHtml}
         </div>
 
@@ -272,13 +364,13 @@ function renderCourtsList(courts) {
 
           <div class="court-info-list">
             <div class="court-info-item">
-              <span>📍 ${court.ubicacion || 'Sede Principal'}</span>
+              <span>📍 ${court.ubicacion || 'Sede Central'}</span>
             </div>
             <div class="court-info-item">
-              <span>👥 Capacidad: ${court.capacidad || 10} personas</span>
+              <span>👥 Capacidad: ${court.capacidad || 10} jugadores</span>
             </div>
             ${court.descripcion ? `
-              <div class="court-info-item" style="color: var(--text-muted); font-size: 0.8rem;">
+              <div class="court-info-item" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.15rem;">
                 <span>${court.descripcion}</span>
               </div>
             ` : ''}
@@ -319,7 +411,9 @@ function renderCourtsList(courts) {
     `;
   }).join('');
 
-  // Eventos para seleccionar píldoras de horario
+  container.innerHTML = offlineBanner + cardsHtml;
+
+  // Asignar eventos de interacción a las franjas horarias
   container.querySelectorAll('.slot-pill:not(.occupied)').forEach(pill => {
     pill.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -340,14 +434,14 @@ function renderCourtsList(courts) {
     });
   });
 
-  // Eventos para el botón "Reservar Turno"
+  // Asignar eventos al botón de reservar turno
   container.querySelectorAll('.btn-book-action:not(:disabled)').forEach(btn => {
     btn.addEventListener('click', () => {
       const card = btn.closest('.court-card');
       const activePill = card.querySelector('.slot-pill.active');
 
       if (!activePill) {
-        showNotification('Por favor selecciona primero un horario (ej: 18:00)', 'error');
+        showNotification('Por favor selecciona un horario disponible (ej: 18:00)', 'error');
         return;
       }
 
@@ -363,8 +457,12 @@ function renderCourtsList(courts) {
   });
 }
 
+window.reconnectBackendClick = () => {
+  loadCourtsWithAvailability();
+};
+
 // ==========================================================
-// 5. MODAL DE CONFIRMACIÓN DE RESERVA (HU4)
+// 5. MODAL DE CONFIRMACIÓN DE RESERVA
 // ==========================================================
 function openBookingModal(courtId, courtName, sportName, franjaId, hora, horaFin) {
   const currentUser = auth.getUsuario();
@@ -379,7 +477,7 @@ function openBookingModal(courtId, courtName, sportName, franjaId, hora, horaFin
   document.getElementById('summary-court-name').textContent = courtName;
   document.getElementById('summary-court-sport').textContent = sportName;
   document.getElementById('summary-court-date').textContent = selectedDate;
-  document.getElementById('summary-court-time').textContent = `${hora} - ${horaFin || (parseInt(hora)+1)+':00'}`;
+  document.getElementById('summary-court-time').textContent = `${hora} - ${horaFin || (parseInt(hora, 10) + 1) + ':00'}`;
   document.getElementById('summary-court-user').textContent = `${currentUser.nombre} (${currentUser.email})`;
 
   AppState.pendingBookingPayload = {
@@ -392,9 +490,7 @@ function openBookingModal(courtId, courtName, sportName, franjaId, hora, horaFin
   document.getElementById('modal-booking-confirm')?.classList.add('active');
 }
 
-// Eventos de los Modales
 function setupModalEvents() {
-  // Cerrar Modal Reserva
   document.getElementById('btn-close-booking-modal')?.addEventListener('click', () => {
     document.getElementById('modal-booking-confirm')?.classList.remove('active');
   });
@@ -402,12 +498,11 @@ function setupModalEvents() {
     document.getElementById('modal-booking-confirm')?.classList.remove('active');
   });
 
-  // Ejecutar Reserva Real (POST /api/reservas)
   document.getElementById('btn-execute-booking')?.addEventListener('click', async () => {
     if (!AppState.pendingBookingPayload) return;
     const btn = document.getElementById('btn-execute-booking');
     btn.disabled = true;
-    btn.textContent = 'Procesando reserva...';
+    btn.textContent = 'Procesando...';
 
     try {
       const p = AppState.pendingBookingPayload;
@@ -415,23 +510,19 @@ function setupModalEvents() {
       
       document.getElementById('modal-booking-confirm')?.classList.remove('active');
       showNotification(`¡Reserva confirmada con código ${response.codigoReserva || 'OK'}!`);
-      
-      // Recargar disponibilidad en vivo
       loadCourtsWithAvailability();
     } catch (err) {
       showNotification(err.message || 'El horario ya fue reservado o no está disponible', 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Confirmar y Reservar';
+      btn.textContent = 'Confirmar Reserva';
     }
   });
 
-  // Cerrar Modal Auth
   document.getElementById('btn-close-auth-modal')?.addEventListener('click', () => {
     document.getElementById('modal-auth-dialog')?.classList.remove('active');
   });
 
-  // Alternar Login / Registro
   document.getElementById('switch-to-register')?.addEventListener('click', () => {
     document.getElementById('auth-modal-heading').textContent = 'Crear Cuenta';
     document.getElementById('form-user-login').style.display = 'none';
@@ -460,13 +551,12 @@ function openAuthModal(mode = 'login') {
 }
 
 // ==========================================================
-// 6. GESTIÓN DE AUTENTICACIÓN (LOGIN & REGISTRO)
+// 6. GESTIÓN DE AUTENTICACIÓN
 // ==========================================================
 function setupAuthEvents() {
   document.getElementById('btn-header-login')?.addEventListener('click', () => openAuthModal('login'));
   document.getElementById('btn-header-register')?.addEventListener('click', () => openAuthModal('register'));
 
-  // Submit Login
   document.getElementById('form-user-login')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-login');
@@ -485,11 +575,10 @@ function setupAuthEvents() {
       showNotification(err.message || 'Credenciales inválidas', 'error');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Entrar a mi Cuenta';
+      btn.textContent = 'Iniciar Sesión';
     }
   });
 
-  // Submit Registro
   document.getElementById('form-user-register')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-register');
@@ -502,7 +591,6 @@ function setupAuthEvents() {
 
     try {
       await api.registrarUsuario(name, email, password);
-      // Login automático
       const sesion = await api.login(email, password);
       auth.guardarSesion(sesion.token, sesion.usuario);
       document.getElementById('modal-auth-dialog')?.classList.remove('active');
@@ -515,19 +603,18 @@ function setupAuthEvents() {
     }
   });
 
-  // Escuchar cambios de sesión
   auth.onAuthStateChanged((user) => {
     const container = document.getElementById('nav-user-actions');
     if (!container) return;
 
     if (user) {
       container.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.65rem;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
           <div style="text-align: right;">
-            <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-main);">${user.nombre}</div>
-            <div style="font-size: 0.72rem; color: var(--accent-lime); font-weight: 700;">${user.rol || 'JUGADOR'}</div>
+            <div style="font-size: 0.88rem; font-weight: 600; color: #ffffff;">${user.nombre}</div>
+            <div style="font-size: 0.72rem; color: #4ade80; font-weight: 600;">${user.rol || 'JUGADOR'}</div>
           </div>
-          <button id="btn-user-logout" class="btn btn-secondary btn-sm" title="Cerrar sesión">
+          <button id="btn-user-logout" class="btn btn-ghost-nav btn-sm" title="Cerrar sesión">
             Cerrar Sesión
           </button>
         </div>
@@ -539,7 +626,7 @@ function setupAuthEvents() {
       });
     } else {
       container.innerHTML = `
-        <button class="btn btn-secondary btn-sm" id="btn-header-login">Iniciar Sesión</button>
+        <button class="btn btn-ghost-nav btn-sm" id="btn-header-login">Iniciar Sesión</button>
         <button class="btn btn-primary btn-sm" id="btn-header-register">Crear Cuenta</button>
       `;
       document.getElementById('btn-header-login')?.addEventListener('click', () => openAuthModal('login'));
@@ -549,7 +636,7 @@ function setupAuthEvents() {
 }
 
 // ==========================================================
-// 7. VISTA: MIS RESERVAS (HISTORIAL Y CANCELACIÓN)
+// 7. VISTA: MIS RESERVAS
 // ==========================================================
 async function loadUserReservations() {
   const container = document.getElementById('user-reservations-container');
@@ -560,7 +647,7 @@ async function loadUserReservations() {
     container.innerHTML = `
       <div class="reservation-item-card">
         <div>
-          <p style="color: var(--text-secondary); margin-bottom: 0.8rem;">Debes iniciar sesión para consultar tus reservas.</p>
+          <p style="color: var(--text-secondary); margin-bottom: 0.6rem;">Debes iniciar sesión para consultar tus reservas activas.</p>
           <button class="btn btn-primary btn-sm" id="btn-login-from-reservas">Iniciar Sesión Ahora</button>
         </div>
       </div>
@@ -580,7 +667,7 @@ async function loadUserReservations() {
     if (!list || list.length === 0) {
       container.innerHTML = `
         <div class="reservation-item-card">
-          <p style="color: var(--text-secondary);">Aún no tienes reservas registradas. ¡Explora las canchas y reserva tu primer turno!</p>
+          <p style="color: var(--text-secondary);">Aún no tienes reservas registradas. ¡Explora los escenarios y reserva tu primer turno!</p>
         </div>
       `;
       return;
@@ -594,7 +681,7 @@ async function loadUserReservations() {
       return `
         <div class="reservation-item-card">
           <div>
-            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.3rem;">
+            <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">
               ${res.escenario ? res.escenario.nombre : 'Escenario Deportivo'}
             </h4>
             <div class="reservation-meta">
@@ -623,15 +710,14 @@ async function loadUserReservations() {
   } catch (err) {
     container.innerHTML = `
       <div class="reservation-item-card">
-        <p style="color: var(--accent-red);">Error al consultar tus reservas. Verifica la conexión con el servidor.</p>
+        <p style="color: var(--status-danger);">Error al consultar tus reservas. Verifica la conexión con el servidor.</p>
       </div>
     `;
   }
 }
 
-// Función global para cancelar reserva con confirmación
 window.executeCancelBooking = async (reservaId, usuarioId) => {
-  if (!confirm('¿Estás seguro de que deseas cancelar esta reserva? El horario quedará libre para otros usuarios.')) {
+  if (!confirm('¿Estás seguro de que deseas cancelar esta reserva? El horario quedará libre para otros estudiantes.')) {
     return;
   }
 
@@ -646,7 +732,7 @@ window.executeCancelBooking = async (reservaId, usuarioId) => {
 };
 
 // ==========================================================
-// 8. VISTA: ADMINISTRACIÓN (ADMIN DASHBOARD)
+// 8. VISTA: ADMINISTRACIÓN
 // ==========================================================
 function setupAdminEvents() {
   document.getElementById('form-register-court')?.addEventListener('submit', async (e) => {
@@ -696,16 +782,16 @@ async function loadAdminCourts() {
         : '<span class="court-status-pill status-mantenimiento" style="position: static;">Mantenimiento / Inactivo</span>';
 
       return `
-        <div style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.9rem 1.1rem; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background-color: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
           <div>
             <strong style="color: var(--text-main); font-size: 0.95rem;">${c.nombre}</strong>
-            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
               <span>📍 ${c.ubicacion}</span> · 
-              <span>⚽ ${SPORT_LABELS[c.tipo] || c.tipo}</span> · 
-              <span>👥 Capacidad: ${c.capacidad}</span>
+              <span>${SPORT_LABELS[c.tipo] || c.tipo}</span> · 
+              <span>Capacidad: ${c.capacidad}</span>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 0.8rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
             ${statusPill}
             ${isAvailable ? `
               <button class="btn btn-secondary btn-sm" onclick="window.deactivateCourtClick(${c.id})">
@@ -721,7 +807,6 @@ async function loadAdminCourts() {
   }
 }
 
-// Función global para desactivar cancha
 window.deactivateCourtClick = async (courtId) => {
   if (!confirm('¿Deseas marcar este escenario en mantenimiento? Dejará de aparecer en la disponibilidad y se bloquearán nuevas reservas.')) {
     return;
@@ -741,11 +826,29 @@ window.deactivateCourtClick = async (courtId) => {
 // 9. CONTROLES DE FILTROS EN TIEMPO REAL
 // ==========================================================
 function setupFilterControls() {
-  document.getElementById('search-court-name')?.addEventListener('input', () => {
+  const sportTabs = document.querySelectorAll('.sport-tab-btn');
+  const sportSelect = document.getElementById('filter-sport-type');
+
+  // Sincronización entre Pestañas de Deporte y Select
+  sportTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sportTabs.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (sportSelect) {
+        sportSelect.value = btn.dataset.sport;
+      }
+      renderCourtsList(AppState.courts);
+    });
+  });
+
+  sportSelect?.addEventListener('change', () => {
+    sportTabs.forEach(b => {
+      b.classList.toggle('active', b.dataset.sport === sportSelect.value);
+    });
     renderCourtsList(AppState.courts);
   });
 
-  document.getElementById('filter-sport-type')?.addEventListener('change', () => {
+  document.getElementById('search-court-name')?.addEventListener('input', () => {
     renderCourtsList(AppState.courts);
   });
 

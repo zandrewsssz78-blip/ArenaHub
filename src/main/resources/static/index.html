@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArenaHub — Sistema de Reservas Deportivas</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ======================================================= -->
+  <!-- BARRA DE NAVEGACIÓN (NAVBAR)                            -->
+  <!-- ======================================================= -->
+  <header class="navbar">
+    <div class="navbar-container">
+      <a class="brand" data-view="view-home">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">Arena<span>Hub</span></div>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a class="nav-link active" data-view="view-home">Inicio</a></li>
+          <li><a class="nav-link" data-view="view-escenarios">Canchas y Horarios</a></li>
+          <li><a class="nav-link" data-view="view-reservas">Mis Reservas</a></li>
+          <li><a class="nav-link" data-view="view-admin">Administración</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-auth" id="navbar-auth-section">
+        <!-- Rellenado dinámicamente por auth.js -->
+        <button class="btn btn-secondary btn-sm" data-view="view-login">Iniciar Sesión</button>
+        <button class="btn btn-primary btn-sm" data-view="view-registro">Registrarse</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================= -->
+  <!-- CONTENIDO PRINCIPAL DINÁMICO (VISTAS)                   -->
+  <!-- ======================================================= -->
+  <main class="main-content">
+
+    <!-- HERO BANNER COMÚN -->
+    <section class="hero-banner">
+      <div class="hero-text">
+        <h1>Reserva tu espacio deportivo <span>sin colisiones</span></h1>
+        <p>Sistema inteligente de gestión de escenarios con garantía estricta de no solapamiento bajo alta concurrencia.</p>
+        <div class="hero-badges">
+          <span id="backend-status" class="badge badge-green">
+            <span class="status-dot"></span> Verificando Backend...
+          </span>
+          <span class="badge badge-blue">Java 21 LTS + Spring Boot 3</span>
+          <span class="badge badge-amber">PostgreSQL 16 (Índice Atómico)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 0: INICIO / DASHBOARD                           -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-home" class="view-section active">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+        
+        <div class="card" style="border-top: 4px solid var(--primary);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏟️</div>
+          <h3 style="margin-bottom: 0.5rem; font-size: 1.15rem;">Explorar Canchas</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+            Consulta la disponibilidad en tiempo real por fecha en 16 franjas horarias fijas.
+          </p>
+          <button class="btn btn-primary btn-sm" data-view="view-escenarios">Ver Disponibilidad →</button>
+        </div>
+
+        <div class="card" style="border-top: 4px solid var(--blue);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
+          <h3 style="margin-bottom: 0.5rem; font-size: 1.15rem;">Mis Reservas</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+            Revisa el historial de tus espacios confirmados y cancela de forma instantánea si no los necesitas.
+          </p>
+          <button class="btn btn-secondary btn-sm" data-view="view-reservas">Ir a Mis Reservas →</button>
+        </div>
+
+        <div class="card" style="border-top: 4px solid #a855f7;">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚙️</div>
+          <h3 style="margin-bottom: 0.5rem; font-size: 1.15rem;">Gestión Administrativa</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+            Registra nuevos complejos deportivos o pon escenarios fuera de servicio por mantenimiento.
+          </p>
+          <button class="btn btn-secondary btn-sm" data-view="view-admin">Panel de Control →</button>
+        </div>
+
+      </div>
+
+      <div class="card" style="margin-top: 2rem; background-color: rgba(30, 41, 59, 0.4);">
+        <h4 style="margin-bottom: 0.5rem; color: var(--text-main);">Estado de los Módulos del Sistema</h4>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+          Módulo 0 activo: Base de diseño, enrutador de vistas, cliente HTTP hacia Spring Boot y gestión de sesión.
+        </p>
+        <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+          <span class="badge badge-green">Módulo 0: Estructura Base (OK)</span>
+          <span class="badge badge-blue">Módulo 1: Login / Registro (Preparado)</span>
+          <span class="badge badge-blue">Módulo 2: Canchas y Reserva (Preparado)</span>
+          <span class="badge badge-blue">Módulo 3: Historial y Cancelar (Preparado)</span>
+          <span class="badge badge-blue">Módulo 4: Administración (Preparado)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 1: CANCHAS Y HORARIOS (MÓDULO 2 PLACEHOLDER)    -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-escenarios" class="view-section">
+      <div class="card">
+        <h2 style="margin-bottom: 0.5rem;">Canchas y Disponibilidad</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+          Módulo 2: Catálogo interactivo de escenarios deportivos y selección de horarios.
+        </p>
+        <div id="escenarios-container" style="color: var(--text-dim); text-align: center; padding: 2.5rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          Listo para conectar con <code>GET /api/escenarios/disponibilidad</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 2: MIS RESERVAS (MÓDULO 3 PLACEHOLDER)          -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-reservas" class="view-section">
+      <div class="card">
+        <h2 style="margin-bottom: 0.5rem;">Mis Reservas</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+          Módulo 3: Consulta de historial propio y cancelación de reservas.
+        </p>
+        <div id="mis-reservas-container" style="color: var(--text-dim); text-align: center; padding: 2.5rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          Listo para conectar con <code>GET /api/reservas?usuarioId=X</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 3: LOGIN (MÓDULO 1 PLACEHOLDER)                 -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-login" class="view-section">
+      <div class="card" style="max-width: 420px; margin: 2rem auto;">
+        <h2 style="margin-bottom: 0.5rem; text-align: center;">Iniciar Sesión</h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem; text-align: center; margin-bottom: 1.5rem;">
+          Ingresa tus credenciales para acceder a ArenaHub
+        </p>
+        <div style="color: var(--text-dim); text-align: center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          Listo para conectar con <code>POST /api/usuarios/login</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 4: REGISTRO (MÓDULO 1 PLACEHOLDER)              -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-registro" class="view-section">
+      <div class="card" style="max-width: 440px; margin: 2rem auto;">
+        <h2 style="margin-bottom: 0.5rem; text-align: center;">Crear Cuenta</h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem; text-align: center; margin-bottom: 1.5rem;">
+          Regístrate para reservar canchas y escenarios deportivos
+        </p>
+        <div style="color: var(--text-dim); text-align: center; padding: 2rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          Listo para conectar con <code>POST /api/usuarios</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- VISTA 5: ADMINISTRACIÓN (MÓDULO 4 PLACEHOLDER)        -->
+    <!-- ----------------------------------------------------- -->
+    <section id="view-admin" class="view-section">
+      <div class="card">
+        <h2 style="margin-bottom: 0.5rem;">Panel de Administración</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+          Módulo 4: Gestión de inventario de escenarios y control de mantenimiento.
+        </p>
+        <div style="color: var(--text-dim); text-align: center; padding: 2.5rem; border: 1px dashed var(--border-color); border-radius: var(--radius-md);">
+          Listo para conectar con <code>POST /api/escenarios</code> y <code>PATCH /desactivar</code>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================= -->
+  <!-- SISTEMA DE NOTIFICACIONES FLOTANTES (TOASTS)            -->
+  <!-- ======================================================= -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ======================================================= -->
+  <!-- PIE DE PÁGINA (FOOTER)                                  -->
+  <!-- ======================================================= -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div>
+        <strong style="color: var(--text-main);">ArenaHub</strong> — Plataforma de Gestión Deportiva
+        <div style="color: var(--text-dim); font-size: 0.78rem;">Ingeniería de Software · Universidad Jorge Tadeo Lozano (UTADEO)</div>
+      </div>
+      <div style="text-align: right;">
+        Autores: <strong>Ana Sofía Siachoque</strong> &amp; <strong>Andrés Felipe Rubiano Duarte</strong>
+        <div style="color: var(--text-dim); font-size: 0.78rem;">Arquitectura por Capas · Java 21 + Spring Boot 3 + PostgreSQL 16</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Principal Modular -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

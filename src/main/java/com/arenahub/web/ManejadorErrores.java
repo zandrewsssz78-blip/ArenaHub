@@ -4,6 +4,8 @@ import com.arenahub.aplicacion.AutenticacionException;
 import com.arenahub.aplicacion.ConflictoException;
 import com.arenahub.aplicacion.RecursoNoEncontradoException;
 import com.arenahub.dominio.ReglaNegocioException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,9 +17,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.stream.Collectors;
 
-/** Traduce las excepciones a respuestas HTTP con un cuerpo uniforme. */
+/**
+ * Traduce las excepciones a respuestas HTTP con un cuerpo uniforme.
+ * Regla 4 & SEG-12: Enmascara errores y nunca expone stack traces ni detalles internos al cliente.
+ */
 @RestControllerAdvice
 public class ManejadorErrores {
+
+    private static final Logger log = LoggerFactory.getLogger(ManejadorErrores.class);
 
     public record ErrorResponse(int status, String error, String mensaje) {
     }
@@ -55,6 +62,16 @@ public class ManejadorErrores {
             MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErrorResponse> solicitudInvalida(Exception e) {
         return respuesta(HttpStatus.BAD_REQUEST, "Solicitud inválida");
+    }
+
+    /**
+     * Regla 4 & SEG-12: Captura cualquier excepción no controlada para evitar
+     * que se filtre la traza interna (stack trace) o detalles de la base de datos.
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> errorInternoNoControlado(Exception e) {
+        log.error("Excepción no controlada capturada por ManejadorErrores: {}", e.getMessage(), e);
+        return respuesta(HttpStatus.INTERNAL_SERVER_ERROR, "Ha ocurrido un error interno. Intente más tarde.");
     }
 
     private static ResponseEntity<ErrorResponse> respuesta(HttpStatus status, String mensaje) {

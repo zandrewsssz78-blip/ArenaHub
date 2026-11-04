@@ -3,3 +3,13 @@ target/
 *.iml
 .vscode/
 .DS_Store
+
+# Secretos y credenciales de entorno (Regla 3: Protección de Secretos)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+*.p12
+*.crt

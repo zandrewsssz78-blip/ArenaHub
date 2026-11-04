@@ -6,6 +6,8 @@ import com.arenahub.persistencia.FranjaHorariaRepository;
 import com.arenahub.persistencia.ReservaRepository;
 import com.arenahub.persistencia.UsuarioRepository;
 import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import java.util.List;
 
 /**
  * HU4 — Crear una reserva (problema duro: concurrencia).
+ * HU5 — Cancelar reserva (SEG-06 / SEG-14: autorización estricta del propietario).
+ * SEG-10 — Registro de auditoría de seguridad sin almacenar información sensible.
  *
  * Mecanismo: la verificación previa (existsBy...) solo da un mensaje rápido en el
  * caso secuencial. La garantía real bajo concurrencia es el índice único parcial
@@ -24,6 +28,8 @@ import java.util.List;
  */
 @Service
 public class ReservaService {
+
+    private static final Logger log = LoggerFactory.getLogger(ReservaService.class);
 
     static final String INDICE_RESERVA_UNICA = "uq_reserva_confirmada";
 
@@ -42,6 +48,9 @@ public class ReservaService {
 
     @Transactional
     public Reserva crear(Long usuarioId, Long escenarioId, LocalDate fecha, Long franjaId) {
+        log.info("Solicitud de reserva: usuarioId={}, escenarioId={}, fecha={}, franjaId={}",
+                usuarioId, escenarioId, fecha, franjaId);
+
         Usuario usuario = usuarios.findById(usuarioId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario " + usuarioId + " no existe"));
         EscenarioDeportivo escenario = escenarios.findById(escenarioId)
@@ -53,13 +62,19 @@ public class ReservaService {
 
         if (reservas.existsByEscenarioIdAndFechaAndFranjaIdAndEstado(
                 escenarioId, fecha, franjaId, EstadoReserva.CONFIRMADA)) {
+            log.warn("Reserva rechazada: horario ocupado (escenarioId={}, fecha={}, franjaId={})",
+                    escenarioId, fecha, franjaId);
             throw horarioOcupado();
         }
 
         try {
-            return reservas.saveAndFlush(reserva);
+            Reserva guardada = reservas.saveAndFlush(reserva);
+            log.info("Reserva creada exitosamente: id={}, codigo={}", guardada.getId(), guardada.getCodigoReserva());
+            return guardada;
         } catch (DataIntegrityViolationException e) {
             if (esViolacionDeReservaUnica(e)) {
+                log.warn("Conflicto de concurrencia: índice único uq_reserva_confirmada activado para escenarioId={}, fecha={}, franjaId={}",
+                        escenarioId, fecha, franjaId);
                 throw horarioOcupado();
             }
             throw e;
@@ -68,13 +83,27 @@ public class ReservaService {
 
     /**
      * HU5 — Cancelar una reserva.
+     * SEG-06 / SEG-14: Aplica validación de autorización estricta verificando que
+     * el usuarioId coincida con el dueño de la reserva.
      */
     @Transactional
     public Reserva cancelar(Long reservaId, Long usuarioId) {
+        log.info("Solicitud de cancelación de reserva: reservaId={}, solicitanteId={}", reservaId, usuarioId);
+
         Reserva reserva = reservas.findByIdConDetalle(reservaId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Reserva " + reservaId + " no existe"));
-        reserva.cancelar(usuarioId);
-        return reservas.save(reserva);
+
+        try {
+            reserva.cancelar(usuarioId);
+        } catch (ReglaNegocioException rne) {
+            log.warn("Cancelación denegada por regla de negocio/autorización: reservaId={}, solicitanteId={}, detalle={}",
+                    reservaId, usuarioId, rne.getMessage());
+            throw rne;
+        }
+
+        Reserva actualizada = reservas.save(reserva);
+        log.info("Reserva cancelada exitosamente: reservaId={}", reservaId);
+        return actualizada;
     }
 
     /**

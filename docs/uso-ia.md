@@ -64,7 +64,22 @@ La responsabilidad final sobre el código, los diseños, las decisiones técnica
 
 ---
 
-## 5. Actualización del Registro
+## 5. Registro de Uso de IA — Semanas 13-14 (Ciberseguridad y RNF)
+
+| Pregunta / Campo | Respuesta registrada |
+|---|---|
+| **1. ¿Qué herramienta se usó?** | Antigravity (Google DeepMind) |
+| **2. ¿Para qué se usó?** | Para realizar la auditoría de ciberseguridad según el sílabo v1.1.1, implementar pruebas automatizadas para las 4 reglas obligatorias y reglas adicionales (SEG-05, SEG-06/14, SEG-08, SEG-10, SEG-12), y redactar el documento `/docs/seguridad-y-rnf.md`. |
+| **3. ¿Qué se aceptó?** | La inclusión de `@ExceptionHandler(Exception.class)` en `ManejadorErrores` para evitar fugas de stack traces, el enmascaramiento de errores de login para prevenir enumeración de usuarios (SEG-08), el aislamiento de secretos en `.gitignore` y variables de entorno, y la creación de la suite de pruebas `SeguridadReglasTest` y `SeguridadWebTest`. |
+| **4. ¿Qué se modificó?** | Las pruebas se adaptaron al dominio específico de ArenaHub (usuarios, canchas, fechas y reservas) y a las entidades existentes, usando la anatomía obligatoria: Preparar, Ejecutar y Verificar. |
+| **5. ¿Qué se rechazó?** | Se rechazó implementar librerías complejas de seguridad perimetral o esquemas JWT pesados no solicitados en el sílabo, manteniendo la simplicidad del MVP con Spring Boot estándar. |
+| **6. ¿Cómo se verificó?** | Se ejecutó la suite completa de 31 pruebas unitarias y de seguridad con Maven Wrapper (`.\mvnw.cmd test -Dtest="*Test,!*IntegracionTest"`), logrando `BUILD SUCCESS` con 0 errores y 0 fallos. |
+| **7. ¿Cuál fue la decisión humana final?** | El equipo validó y aprobó los controles de seguridad, el checklist 10/10 y el documento técnico `/docs/seguridad-y-rnf.md`. |
+| **8. ¿Qué riesgo permanece?** | Las pruebas de integración contra PostgreSQL real requieren que el contenedor Docker esté activo en el entorno local antes de la ejecución de `*IntegracionTest`. |
+
+---
+
+## 6. Actualización del Registro
 
 Este documento deberá actualizarse durante el desarrollo del proyecto para documentar las interacciones reales que el equipo tenga con herramientas de inteligencia artificial.
 

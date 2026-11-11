@@ -1,8 +1,8 @@
 # Paquete de evidencia para la entrevista técnica — ArenaHub
 
-Este documento reúne lo que el equipo debe poder explicar y defender: las decisiones y su
+Este documento reúne las decisiones y su
 justificación, el conocimiento técnico detrás del problema duro y las respuestas a las preguntas
-previsibles. Cada respuesta apunta a la evidencia en el repositorio.
+previsibles.
 
 ## 1. Decisiones importantes y su justificación
 

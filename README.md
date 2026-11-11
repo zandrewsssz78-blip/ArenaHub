@@ -38,6 +38,31 @@ Las tablas las crea **Flyway** al arrancar (`src/main/resources/db/migration`) e
 esquema `arenahub`. Las pruebas usan el esquema `arenahub_test`, que se borra y se
 vuelve a migrar en cada ejecución.
 
+### Interfaz web
+
+Con la aplicación corriendo, abrir **http://localhost:8080**. El frontend es HTML, CSS y
+JavaScript sin frameworks (`src/main/resources/static`), lo sirve el mismo Spring Boot y
+consume la API REST de abajo, así que no necesita comandos extra.
+
+| Pantalla | Historias |
+|---|---|
+| Iniciar sesión / Crear cuenta | HU1, HU2 |
+| Reservar: días, filtro por tipo y franjas libres, ocupadas o propias | HU3, HU4 |
+| Mis reservas: tiquetes con código, cancelación e historial | HU5, HU6 |
+| Escenarios (solo rol `ADMINISTRADOR`): registrar y cambiar estado | HU7, HU8 |
+
+Si dos personas intentan la misma franja, la segunda recibe el `409` del índice único
+parcial y la interfaz le avisa que alguien reservó primero (problema duro).
+
+Para ver la pantalla de administración, convertir un usuario registrado en administrador:
+
+```bash
+docker compose exec db psql -U arenahub -d reservas_deportivas \
+  -c "UPDATE arenahub.usuario SET rol = 'ADMINISTRADOR' WHERE email = 'ana@example.com';"
+```
+
+Luego cerrar sesión y volver a entrar.
+
 ### Probar a mano (Historias de Usuario HU1 - HU8)
 
 ```bash

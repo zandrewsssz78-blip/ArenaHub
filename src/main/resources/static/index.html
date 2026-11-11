@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArenaHub | Reserva de escenarios deportivos</title>
+  <meta name="description" content="Reserva canchas y escenarios deportivos por franja horaria.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/arenahub.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231F6B4A'/%3E%3Crect x='5' y='8' width='22' height='16' fill='none' stroke='white' stroke-width='2'/%3E%3Cline x1='16' y1='8' x2='16' y2='24' stroke='white' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Ir al contenido</a>
+
+  <!-- ===================== Acceso (HU1 registro / HU2 login) ===================== -->
+  <section id="vista-acceso" class="acceso" hidden>
+    <div class="acceso__cancha" aria-hidden="true">
+      <svg viewBox="0 0 600 900" preserveAspectRatio="xMidYMid slice">
+        <g fill="none" stroke="currentColor" stroke-width="4">
+          <rect x="40" y="40" width="520" height="820"/>
+          <line x1="40" y1="450" x2="560" y2="450"/>
+          <circle cx="300" cy="450" r="90"/>
+          <circle cx="300" cy="450" r="5" fill="currentColor"/>
+          <rect x="150" y="40" width="300" height="150"/>
+          <rect x="220" y="40" width="160" height="60"/>
+          <path d="M240 190 a70 70 0 0 0 120 0"/>
+          <rect x="150" y="710" width="300" height="150"/>
+          <rect x="220" y="800" width="160" height="60"/>
+          <path d="M240 710 a70 70 0 0 1 120 0"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="acceso__intro">
+      <p class="marca marca--clara">
+        <svg class="marca__logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="26" height="18" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="16" y1="7" x2="16" y2="25" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+        ArenaHub
+      </p>
+      <h1 class="acceso__titulo">Tu cancha, a la hora que quieres.</h1>
+      <p class="acceso__texto">Mira qué escenarios están libres, aparta tu franja en un clic y lleva tu código de reserva a la entrada.</p>
+    </div>
+
+    <div class="acceso__panel">
+      <div class="pestanas" role="tablist" aria-label="Acceso">
+        <button class="pestana" role="tab" id="tab-login" aria-controls="form-login" aria-selected="true">Iniciar sesión</button>
+        <button class="pestana" role="tab" id="tab-registro" aria-controls="form-registro" aria-selected="false">Crear cuenta</button>
+      </div>
+
+      <form id="form-login" class="formulario" role="tabpanel" aria-labelledby="tab-login" novalidate>
+        <label class="campo">
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <label class="campo">
+          <span>Contraseña</span>
+          <input type="password" name="contrasena" autocomplete="current-password" required>
+        </label>
+        <p class="formulario__error" role="alert" hidden></p>
+        <button class="boton boton--principal" type="submit">Entrar</button>
+      </form>
+
+      <form id="form-registro" class="formulario" role="tabpanel" aria-labelledby="tab-registro" novalidate hidden>
+        <label class="campo">
+          <span>Nombre completo</span>
+          <input type="text" name="nombre" autocomplete="name" maxlength="100" required>
+        </label>
+        <label class="campo">
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="email" maxlength="150" required>
+        </label>
+        <label class="campo">
+          <span>Contraseña</span>
+          <input type="password" name="contrasena" autocomplete="new-password" minlength="8" maxlength="72" required>
+          <small>Mínimo 8 caracteres.</small>
+        </label>
+        <p class="formulario__error" role="alert" hidden></p>
+        <button class="boton boton--principal" type="submit">Crear cuenta</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===================== Aplicación ===================== -->
+  <div id="vista-app" class="app" hidden>
+    <header class="barra">
+      <a class="marca" href="#/reservar">
+        <svg class="marca__logo" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="7" width="26" height="18" fill="none" stroke="currentColor" stroke-width="2.4"/><line x1="16" y1="7" x2="16" y2="25" stroke="currentColor" stroke-width="2.4"/><circle cx="16" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+        ArenaHub
+      </a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#/reservar" data-ruta="reservar">Reservar</a>
+        <a href="#/mis-reservas" data-ruta="mis-reservas">Mis reservas</a>
+        <a href="#/admin" data-ruta="admin" id="nav-admin" hidden>Escenarios</a>
+      </nav>
+      <div class="usuario">
+        <span class="usuario__inicial" aria-hidden="true"></span>
+        <span class="usuario__nombre"></span>
+        <button class="boton boton--fantasma boton--chico" id="btn-salir" type="button">Salir</button>
+      </div>
+    </header>
+
+    <main id="contenido" tabindex="-1">
+      <!-- HU3 + HU4 -->
+      <section id="ruta-reservar" class="ruta" hidden>
+        <div class="encabezado">
+          <h1>Reservar</h1>
+          <p>Elige el día, toca una hora libre y confírmala.</p>
+        </div>
+
+        <div class="controles">
+          <div class="dias" id="dias" role="radiogroup" aria-label="Día de la reserva"></div>
+          <div class="filtros" id="filtros" role="radiogroup" aria-label="Tipo de escenario"></div>
+        </div>
+
+        <ul class="leyenda" aria-label="Convenciones">
+          <li><span class="punto punto--libre"></span>Libre</li>
+          <li><span class="punto punto--tuya"></span>Tuya</li>
+          <li><span class="punto punto--ocupada"></span>Ocupada</li>
+          <li><span class="punto punto--pasada"></span>Ya pasó</li>
+        </ul>
+
+        <div id="lista-escenarios" class="escenarios" aria-live="polite"></div>
+      </section>
+
+      <!-- HU5 + HU6 -->
+      <section id="ruta-mis-reservas" class="ruta" hidden>
+        <div class="encabezado">
+          <h1>Mis reservas</h1>
+          <p>Presenta el código en la entrada del escenario.</p>
+        </div>
+        <h2 class="subtitulo">Próximas</h2>
+        <div id="reservas-proximas" class="tiquetes"></div>
+        <h2 class="subtitulo">Historial</h2>
+        <div id="reservas-historial" class="historial"></div>
+      </section>
+
+      <!-- HU7 + HU8 -->
+      <section id="ruta-admin" class="ruta" hidden>
+        <div class="encabezado">
+          <h1>Escenarios</h1>
+          <p>Registra escenarios nuevos y cambia su estado. Solo los activos aparecen para reservar.</p>
+        </div>
+        <div class="admin">
+          <form id="form-escenario" class="formulario formulario--tarjeta" novalidate>
+            <h2>Nuevo escenario</h2>
+            <label class="campo"><span>Nombre</span><input name="nombre" maxlength="100" required></label>
+            <div class="campo-doble">
+              <label class="campo"><span>Tipo</span>
+                <select name="tipo" required></select>
+              </label>
+              <label class="campo"><span>Capacidad</span><input name="capacidad" type="number" min="1" inputmode="numeric"></label>
+            </div>
+            <label class="campo"><span>Ubicación</span><input name="ubicacion" maxlength="200" required placeholder="Sede Norte - Bloque A"></label>
+            <label class="campo"><span>Descripción</span><textarea name="descripcion" maxlength="500" rows="3"></textarea></label>
+            <p class="formulario__error" role="alert" hidden></p>
+            <button class="boton boton--principal" type="submit">Registrar escenario</button>
+          </form>
+          <div class="tabla-envoltura">
+            <table class="tabla">
+              <caption class="oculto">Escenarios registrados</caption>
+              <thead><tr><th scope="col">Escenario</th><th scope="col">Tipo</th><th scope="col">Capacidad</th><th scope="col">Estado</th></tr></thead>
+              <tbody id="tabla-escenarios"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Diálogo reutilizable -->
+  <dialog id="dialogo" class="dialogo" aria-labelledby="dialogo-titulo">
+    <div id="dialogo-cuerpo"></div>
+  </dialog>
+
+  <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

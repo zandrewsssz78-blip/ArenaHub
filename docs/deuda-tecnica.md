@@ -27,6 +27,26 @@ dentro del mismo impacto, lo de **menor esfuerzo**.
 | DT-9 | **9** | `mvnw` está en el repositorio **sin permiso de ejecución**: en Mac/Linux `./mvnw` falla con "Permission denied". | Bajo | Bajo | Contrato de ejecución del README | `git update-index --chmod=+x mvnw`. |
 | DT-10 | **10** | Ramas antiguas sin borrar (`bd/modelo-datos`, `java/esqueleto-inicial`, `feature/esqueleto-andante`). | Bajo | Bajo | Repositorio | Borrarlas: su contenido útil ya está en `main`. |
 
+## Plan de mejora (después del MVP)
+
+Orden de ejecución propuesto. Cada acción indica qué deuda paga y cómo se sabrá que quedó resuelta.
+
+| Prioridad | Área | Mejora propuesta | Paga | Impacto | Esfuerzo | Criterio de cierre |
+|---|---|---|---|---|---|---|
+| 1 | Seguridad | Autenticación con JWT: el usuario sale del encabezado `Authorization` y se quita `usuarioId` de los requests | DT-1 | Alto | Alto | Prueba de integración: un token de otro usuario no puede cancelar ni listar reservas ajenas (401/403) |
+| 2 | Seguridad | Verificar rol `ADMINISTRADOR` en HU7 y HU8 | DT-2 | Alto | Medio | Prueba: un `JUGADOR` recibe 403 al crear o cambiar estado de un escenario |
+| 3 | Integridad de datos | Política para reservas futuras al desactivar un escenario (cancelarlas o impedir la desactivación), decidida en equipo | DT-3 | Alto | Medio | Prueba: tras desactivar, no quedan reservas futuras `CONFIRMADA` sin tratar |
+| 4 | Mantenibilidad | Identificar la restricción violada en `EscenarioService.registrar` | DT-4 | Medio | Bajo | Prueba: un error de integridad distinto al nombre no responde "nombre duplicado" |
+| 5 | Usabilidad | Rechazar en el backend franjas de hoy que ya empezaron, con `Clock` inyectable | DT-5 | Medio | Bajo | Prueba con reloj fijo |
+| 6 | Rendimiento | Medir RNF-1 (p95 < 400 ms, 50 usuarios, 2 min) | DT-8 | Medio | Medio | Reporte de la prueba de carga en `/docs` |
+| 7 | API | Dejar solo `PATCH …/cancelar` | DT-6 | Bajo | Bajo | El endpoint `DELETE` responde 405 y el README no lo menciona |
+| 8 | Repositorio | Permiso de ejecución a `mvnw` y borrar ramas antiguas | DT-9, DT-10 | Bajo | Bajo | `./mvnw` corre en Mac/Linux sin `chmod`; solo quedan ramas activas |
+| 9 | Código | Quitar `null` innecesarios en `ReservaResponse.de` | DT-7 | Bajo | Bajo | Pruebas de respuesta en verde |
+
+Las prioridades 1 a 3 se hacen antes de exponer el sistema a usuarios reales: son las únicas con
+riesgo de seguridad o de datos incorrectos. El plan muestra que el MVP puede seguir
+evolucionando sin rehacer su arquitectura: cada mejora cabe en las capas existentes.
+
 ## Ya pagada
 
 | Deuda | Cómo se pagó |

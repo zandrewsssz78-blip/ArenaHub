@@ -108,8 +108,12 @@ Detalle del esqueleto andante y cobertura de HU: [`docs/esqueleto-andante.md`](.
 | Problema duro | [`docs/problema-duro.md`](./docs/problema-duro.md) | Concurrencia en reservas: declaración, mecanismo y evidencia |
 | Esqueleto andante | [`docs/esqueleto-andante.md`](./docs/esqueleto-andante.md) | Historias implementadas, endpoints y pruebas |
 | Revisión de código | [`docs/revision-codigo.md`](./docs/revision-codigo.md) | Defectos, code smells, SOLID/GRASP y refactorizaciones |
-| Deuda técnica | [`docs/deuda-tecnica.md`](./docs/deuda-tecnica.md) | Deuda identificada, registrada y priorizada |
+| Deuda técnica | [`docs/deuda-tecnica.md`](./docs/deuda-tecnica.md) | Deuda identificada, priorizada y plan de mejora |
 | Registro de uso de IA | [`docs/uso-ia.md`](./docs/uso-ia.md) | Sugerencias de IA aceptadas/rechazadas y por qué |
+| Guía de instalación | [`docs/guia-instalacion.md`](./docs/guia-instalacion.md) | Requisitos, instalación desde cero, configuración y solución de problemas |
+| Manual de usuario | [`docs/manual-usuario.md`](./docs/manual-usuario.md) | Roles, flujos con capturas, casos de uso y preguntas frecuentes |
+| Informe técnico | [`docs/informe-tecnico.md`](./docs/informe-tecnico.md) | Resumen ejecutivo, arquitectura, implementación, pruebas y lecciones aprendidas |
+| Paquete de entrevista | [`docs/paquete-entrevista.md`](./docs/paquete-entrevista.md) | Decisiones justificadas, conocimiento técnico y preguntas anticipadas |
 
 ## Problema duro: Concurrencia
 
